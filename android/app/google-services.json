@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "322778065886",
+    "project_id": "grivety-flutter",
+    "storage_bucket": "grivety-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322778065886:android:90de32e7f3647e6bba8b4f",
+        "android_client_info": {
+          "package_name": "com.hirdesh.grivety"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "322778065886-tid95v60866i8iebfa859gtrroo453od.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbijDVP1dtETYA_t-1R8FHOt34n4gvpvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "322778065886-tid95v60866i8iebfa859gtrroo453od.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
