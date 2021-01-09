@@ -85,11 +85,11 @@ class News extends StatelessWidget {
     );
   }
 }
-
+@override
 class SingleItem extends StatefulWidget {
   SingleItem(this.title, this.url);
-  String title;
-  String url;
+  final String title;
+  final String url;
 
   @override
   _SingleItemState createState() => _SingleItemState();

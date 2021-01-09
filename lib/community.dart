@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:grivety/community_add.dart';
+import 'package:grivety/image_community.dart';
+import 'package:grivety/like_com.dart';
+import './video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './list_tile_com.dart';
 
 class Community extends StatefulWidget {
   @override
@@ -26,27 +30,10 @@ class _CommunityState extends State<Community> {
                 }
                 final documents = snapshot.data.documents;
                 return ListView.builder(
-                  reverse: true,
-                  itemBuilder: (_, int index) {
+                  itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            child: Image.asset(
-                              'assests/google.png',
-                              height: 80,
-                              width: 80,
-                            ),
-                          ),
-                          title: Text(documents[index].data()['Name']),
-                          subtitle: Text('year'),
-                          trailing: IconButton(
-                            splashRadius: 20,
-                            padding: EdgeInsets.all(2),
-                            icon: Icon(Icons.more_vert),
-                            onPressed: () {},
-                          ),
-                        ),
+                        ListTileCommunity(documents, index),
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
@@ -56,35 +43,11 @@ class _CommunityState extends State<Community> {
                                 textAlign: TextAlign.left,
                               ),
                             )),
-                        if(documents[index].data()['Image']!='')Image.network(
-                                                documents[index]
-                                                    .data()['Image'],
-                                              ),
-                        Row(children: [
-                          FlatButton(
-                            child: Row(children: [
-                              Icon(Icons.thumb_up_sharp),
-                              SizedBox(height:1,width:8),
-                              Text(documents[index].data()['Likes'])
-                            ]),
-                            onPressed: () {
-                              String valr = documents[index].data()['Likes'];
-                              int val = int.parse(valr);
-                              val++;
-                              print(index.toString());
-                              FirebaseFirestore.instance.collection('Community').doc(index.toString()).update({'Likes':val.toString()});
-                            },
-                          ),
-                          FlatButton(
-                            child: Row(children: [
-                              Icon(Icons.comment),
-                              SizedBox(height:1,width:8),
-                              
-                              Text(documents[index].data()['Likes'])
-                            ]),
-                            onPressed: () {},
-                          )
-                        ]),
+                        if (documents[index].data()['Image'] != '')
+                          ImageCom(documents, index),
+                        if (documents[index].data()['Video'] != '')
+                          VideoPlayercustom(index.toString()),
+                        LikeCom( documents[index].data()['Question'],),
                         Divider(
                           thickness: 2,
                         )

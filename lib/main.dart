@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:grivety/comments.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/splash.dart';
 import './test.dart';
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> {
             routes: {
               Splash.routeName: (ctx) => Splash(),
               Communityadd.routeName: (ctx) => Communityadd(),
+              Comments.routeName: (ctx) => Comments(),
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(
