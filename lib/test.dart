@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:grivety/community.dart';
 import './news.dart';
 import './people.dart';
 
 class Test extends StatefulWidget {
+  static const routeName ='/Test';
   @override
   _TestState createState() => _TestState();
 }
@@ -17,7 +20,27 @@ class _TestState extends State<Test> with AutomaticKeepAliveClientMixin<Test> {
     super.build(context);
     return DefaultTabController(length: 4,
       child: Scaffold(
-        drawer: Drawer(child: Text("hello"),),
+        drawer: Container(
+        margin: MediaQuery.of(context).padding,
+        child: Drawer(
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                child: Text("Header"),
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text("Logout"),
+                onTap: () async {
+                  final FirebaseAuth _firebase = FirebaseAuth.instance;
+                  await _firebase.signOut();
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ),
+      ),
         appBar: AppBar(
           bottom: TabBar(
             isScrollable: true,

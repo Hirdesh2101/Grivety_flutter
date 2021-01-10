@@ -4,20 +4,21 @@ import './quest_pass.dart';
 import './comments.dart';
 
 class LikeCom extends StatelessWidget {
-
   final String question;
   LikeCom(this.question);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-                  .collection('Community').where('Question',isEqualTo: question)
-                  .snapshots(),
+            .collection('Community')
+            .where('Question', isEqualTo: question)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );}
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           final documents = snapshot.data.documents;
           List<dynamic> list = snapshot.data.docs[0]['Comments'];
           return Row(children: [
@@ -27,15 +28,15 @@ class LikeCom extends StatelessWidget {
                 SizedBox(height: 1, width: 8),
                 Text(documents[0].data()['Likes'])
               ]),
-              onPressed: () {
-                String valr = documents[0].data()['Likes'];
+              onPressed: () async {
+                int index = snapshot.data.docs[0].id;
+                String valr = documents[index].data()['Likes'];
                 int val = int.parse(valr);
                 val++;
-                snapshot.data.doc.update({'Likes': val.toString()});
-                // FirebaseFirestore.instance
-               //     .collection('Community')
-                 //   .doc(0)
-                   // .update({'Likes': val.toString()});
+                FirebaseFirestore.instance
+                    .collection('Community')
+                    .doc(index.toString())
+                    .update({'Likes': val.toString()});
               },
             ),
             FlatButton(

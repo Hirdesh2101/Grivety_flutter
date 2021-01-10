@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+
+import 'package:grivety/auth/login.dart';
 import 'package:grivety/comments.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/splash.dart';
@@ -27,15 +31,30 @@ class _MyAppState extends State<MyApp> {
             darkTheme: ThemeData.dark(),
             home: appshapshot.connectionState != ConnectionState.done
                 ? Splash()
-                : Test(),
+                : StreamBuilder(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (ctx, userSnapshot) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        Timer(const Duration(seconds:2),(){
+                        });
+                        return Splash();
+                      }
+                      if (userSnapshot.hasData) {
+                        return Test();
+                      }
+                      return Loginscreen();
+                    }),
             routes: {
+              Test.routeName: (ctx) => Test(),
               Splash.routeName: (ctx) => Splash(),
+              Loginscreen.routeName: (ctx) => Loginscreen(),
               Communityadd.routeName: (ctx) => Communityadd(),
               Comments.routeName: (ctx) => Comments(),
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(
-                builder: (ctx) => Test(),
+                builder: (ctx) => Loginscreen(),
               );
             },
           );

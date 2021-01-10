@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Communityadd extends StatefulWidget {
   static const routeName = '/community_add';
@@ -9,6 +12,28 @@ class Communityadd extends StatefulWidget {
 class _CommunityaddState extends State<Communityadd> {
   TextEditingController _textEditingController = TextEditingController();
   bool _isUploading = false;
+
+
+  _addQues()async{
+    setState(() {
+        _isUploading = true;
+      });
+      final user = await FirebaseAuth.instance.currentUser;
+      await FirebaseFirestore.instance
+                      .collection('Community')
+                      .doc().set({
+                        'uuid': user.uid,
+                        'Question': _textEditingController.text,
+                        'Comments': [],
+                        'Image': '',
+                        'Video': '',
+                        'Likes': '0',
+                      });
+      _textEditingController.text ='';  
+      setState(() {
+        _isUploading = false;
+      });   
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
