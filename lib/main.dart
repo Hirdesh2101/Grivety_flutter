@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:grivety/auth/addImage.dart';
 import 'dart:async';
 
 import 'package:grivety/auth/login.dart';
+import 'package:grivety/auth/register.dart';
 import 'package:grivety/comments.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/splash.dart';
@@ -51,6 +53,8 @@ class _MyAppState extends State<MyApp> {
               Loginscreen.routeName: (ctx) => Loginscreen(),
               Communityadd.routeName: (ctx) => Communityadd(),
               Comments.routeName: (ctx) => Comments(),
+              Register.routeName: (ctx) => Register(),
+              AddImage.routeName: (ctx)=> AddImage(), 
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(

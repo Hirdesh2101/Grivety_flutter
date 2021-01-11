@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,29 +12,32 @@ class _CommunityaddState extends State<Communityadd> {
   TextEditingController _textEditingController = TextEditingController();
   bool _isUploading = false;
 
-
-  _addQues()async{
-    setState(() {
+  @override
+  Widget build(BuildContext context) {
+    _addQues() async {
+      setState(() {
         _isUploading = true;
       });
       final user = await FirebaseAuth.instance.currentUser;
       await FirebaseFirestore.instance
-                      .collection('Community')
-                      .doc().set({
-                        'uuid': user.uid,
-                        'Question': _textEditingController.text,
-                        'Comments': [],
-                        'Image': '',
-                        'Video': '',
-                        'Likes': '0',
-                      });
-      _textEditingController.text ='';  
+          .collection('Community')
+          .doc(DateTime.now().toString())
+          .set({
+        'Name': user.uid,
+        'Question': _textEditingController.text,
+        'Comments': [],
+        'Image': '',
+        'Video': '',
+        'Likes': '0',
+        'TimeStamp': DateTime.now().toString(),
+      });
+      _textEditingController.text = '';
       setState(() {
         _isUploading = false;
-      });   
-  }
-  @override
-  Widget build(BuildContext context) {
+      });
+      Navigator.of(context).pop();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -92,13 +94,7 @@ class _CommunityaddState extends State<Communityadd> {
                       disabledColor: Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20))),
-                      onPressed: _isUploading
-                          ? null
-                          : () {
-                              setState(() {
-                                _isUploading = true;
-                              });
-                            },
+                      onPressed: _isUploading ? null : _addQues,
                       child: Text('ADD'),
                     ),
                   )

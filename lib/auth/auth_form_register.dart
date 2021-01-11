@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import './register.dart';
 
-class AuthFormLogin extends StatefulWidget {
-  AuthFormLogin(
+class AuthForm extends StatefulWidget {
+  AuthForm(
     this.submitFn,
     this.isLoading,
   );
@@ -16,10 +15,10 @@ class AuthFormLogin extends StatefulWidget {
   ) submitFn;
 
   @override
-  _AuthFormLoginState createState() => _AuthFormLoginState();
+  _AuthFormState createState() => _AuthFormState();
 }
 
-class _AuthFormLoginState extends State<AuthFormLogin> {
+class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   var _userEmail = '';
   var _userName = '';
@@ -76,6 +75,20 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                     ),
                     TextFormField(
                       enabled: widget.isLoading ? false : true,
+                      key: ValueKey('username'),
+                      validator: (value) {
+                        if (value.isEmpty || value.length < 4) {
+                          return 'Please enter at least 4 characters';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(labelText: 'Username'),
+                      onSaved: (value) {
+                        _userName = value;
+                      },
+                    ),
+                    TextFormField(
+                      enabled: widget.isLoading ? false : true,
                       key: ValueKey('password'),
                       validator: (value) {
                         if (value.isEmpty || value.length < 7) {
@@ -97,19 +110,13 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         child: Text(
-                          'Login',
+                          'Signup',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
                         onPressed: _trySubmit,
                       ),
-                    Center(
-                      child: GestureDetector(
-                          onTap: () => Navigator.of(context)
-                              .pushNamed(Register.routeName),
-                          child: Text('New User Register Here')),
-                    )
                   ],
                 ),
               ),

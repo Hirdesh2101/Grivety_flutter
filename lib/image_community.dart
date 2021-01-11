@@ -11,10 +11,6 @@ class ImageCom extends StatefulWidget {
 }
 
 class _ImageComState extends State<ImageCom> {
-  TransformationController controller = TransformationController();
-
-  String velocity = "VELOCITY";
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -28,20 +24,10 @@ class _ImageComState extends State<ImageCom> {
               .doc(widget.index.toString())
               .update({'Likes': val.toString()});
         },
-        child: InteractiveViewer(
-          maxScale: 5.0,
-          transformationController: controller,
-          onInteractionEnd: (ScaleEndDetails end){
-            controller.value = Matrix4.identity();
-            setState(() {
-              velocity = end.velocity.toString();
-            });
-          },
-          child: FadeInImage.assetNetwork(
-            image: widget.documents[widget.index].data()['Image'],
-            placeholder: 'assests/google.png',
-            placeholderScale: 4.0,
-          ),
+        child: FadeInImage.assetNetwork(
+          image: widget.documents[widget.index].data()['Image'],
+          placeholder: 'assests/google.png',
+          placeholderScale: 4.0,
         ));
   }
 }
