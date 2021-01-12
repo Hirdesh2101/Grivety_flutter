@@ -16,18 +16,32 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
+  String s;
+  Future<void> _val()async{
+    final user = FirebaseAuth.instance.currentUser.uid;
+    await FirebaseFirestore.instance
+                .collection('Users')
+                .doc(user)
+                .get().then((value) async{s = await value.data()['Admin'];});
+  }
   //static const _adUnitID = "<ca-app-pub-3940256099942544/2247696110>";
-   //final _controller = NativeAdmobController();
+  //final _controller = NativeAdmobController();
+  @override
+  void initState() {
+    _val();
+    // TODO: implement initState
+    super.initState();
+  }
   
   @override
   void dispose() {
-   // _controller.dispose();
+    // _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser.uid;
-    String s = '';
+    print(s);
     return Stack(
       children: [
         Container(
@@ -48,8 +62,8 @@ class _CommunityState extends State<Community> {
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
-                        //if (index % 3 == 0)
-                         /* Container(
+                        /* if (index % 3 == 0)
+                          Container(
                             padding: EdgeInsets.all(10),
                             margin: EdgeInsets.only(bottom: 20.0),
                             child: NativeAdmob(
@@ -59,7 +73,7 @@ class _CommunityState extends State<Community> {
                               loading: Center(child: CircularProgressIndicator()),
                             ),
                           ),*/
-                        ListTileCommunity(documents, index, s),
+                        ListTileCommunity(documents, index),
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(

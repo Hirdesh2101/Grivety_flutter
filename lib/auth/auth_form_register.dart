@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthForm extends StatefulWidget {
   AuthForm(
@@ -11,6 +12,7 @@ class AuthForm extends StatefulWidget {
     String email,
     String password,
     String userName,
+    String gender,
     BuildContext ctx,
   ) submitFn;
 
@@ -27,11 +29,38 @@ class _AuthFormState extends State<AuthForm> {
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
+    if(_result==''){
+      Fluttertoast.showToast(
+        msg: "Please Select Gender",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+       // backgroundColor: Colors.red,
+       // textColor: Colors.white,
+        fontSize: 16.0
+    );
+    }
 
-    if (isValid) {
+    if (isValid &&_result!='') {
       _formKey.currentState.save();
       widget.submitFn(
-          _userEmail.trim(), _userPassword.trim(), _userName.trim(), context);
+          _userEmail.trim(), _userPassword.trim(), _userName.trim(),_result.trim(), context);
+    }
+  }
+
+  int _radioValue =0;
+  String _result ='';
+  void _handelRadioValueChange(int value) {
+    setState(() {
+      _radioValue = value;
+    });
+    switch (_radioValue) {
+      case 1:
+        _result = 'Male';
+        break;
+      case 2:
+        _result = 'Female';
+        break;
     }
   }
 
@@ -101,6 +130,23 @@ class _AuthFormState extends State<AuthForm> {
                       onSaved: (value) {
                         _userPassword = value;
                       },
+                    ),
+                    Row(
+                      children: [
+                        Text('Gender: '),
+                        new Radio(
+                          value: 1,
+                          groupValue: _radioValue,
+                          onChanged: _handelRadioValueChange,
+                        ),
+                        Text('Male'),
+                        new Radio(
+                          value: 2,
+                          groupValue: _radioValue,
+                          onChanged: _handelRadioValueChange,
+                        ),
+                        Text('Female'),
+                      ],
                     ),
                     SizedBox(height: 12),
                     if (widget.isLoading) CircularProgressIndicator(),

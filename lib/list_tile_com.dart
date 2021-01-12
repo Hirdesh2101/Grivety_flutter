@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-enum MenuOption{Report,Delete}
+enum MenuOption { Report, Delete }
 
 class ListTileCommunity extends StatelessWidget {
   final dynamic documents;
-  final String admin;
   final int index;
-  ListTileCommunity(this.documents,this.index,this.admin);
+  ListTileCommunity(this.documents, this.index);
 
   @override
   Widget build(BuildContext context) {
+    //print(admin);
+
     return ListTile(
       leading: CircleAvatar(
         child: Image.asset(
@@ -20,21 +23,30 @@ class ListTileCommunity extends StatelessWidget {
       ),
       title: Text(documents[index].data()['Name']),
       subtitle: Text('year'),
-      trailing: PopupMenuButton<MenuOption>(
-        itemBuilder: (BuildContext context){
-          return <PopupMenuEntry<MenuOption>>[
-            PopupMenuItem(child: Text('Report'),
-            value: MenuOption.Report,
+      trailing: PopupMenuButton(
+        itemBuilder: (BuildContext context) {
+          return <PopupMenuEntry>[
+            PopupMenuItem(
+              child: Text('Report'),
+              value: 1,
             ),
-            if(admin =='YES')PopupMenuItem(child: Text('Delete'),
-            value: MenuOption.Delete,
-            ),
+            if ('y' == 'YES')
+              PopupMenuItem(
+                child: Text('Delete'),
+                value: 2,
+              ),
           ];
         },
-      )
-      
-      
-     /* IconButton(
+        onSelected: (value){
+          final user = FirebaseAuth.instance.currentUser.uid;
+          var obj = [{'User':user}];
+          if(value==1){
+            dynamic docu = documents[index].id;
+            FirebaseFirestore.instance.collection('Community').doc(docu).update({'Reports':FieldValue.arrayUnion(obj)});
+          }
+        },
+      ),
+      /* IconButton(
         splashRadius: 20,
         padding: EdgeInsets.all(2),
         icon: Icon(Icons.more_vert),
@@ -42,4 +54,4 @@ class ListTileCommunity extends StatelessWidget {
       ),*/
     );
   }
-  }
+}

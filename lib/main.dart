@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:grivety/auth/login.dart';
 import 'package:grivety/auth/register.dart';
 import 'package:grivety/comments.dart';
+import 'package:splashscreen/splashscreen.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/splash.dart';
 import './test.dart';
@@ -33,20 +34,31 @@ class _MyAppState extends State<MyApp> {
             darkTheme: ThemeData.dark(),
             home: appshapshot.connectionState != ConnectionState.done
                 ? Splash()
-                : StreamBuilder(
-                    stream: FirebaseAuth.instance.authStateChanges(),
-                    builder: (ctx, userSnapshot) {
-                      if (userSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        Timer(const Duration(seconds:2),(){
-                        });
-                        return Splash();
-                      }
-                      if (userSnapshot.hasData) {
-                        return Test();
-                      }
-                      return Loginscreen();
-                    }),
+                : new SplashScreen(
+                    seconds: 5,
+                    navigateAfterSeconds: StreamBuilder(
+                        stream: FirebaseAuth.instance.authStateChanges(),
+                        builder: (ctx, userSnapshot) {
+                          if (userSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            Timer(const Duration(seconds: 2), () {});
+                            return Splash();
+                          }
+                          if (userSnapshot.hasData) {
+                            return Test();
+                          }
+                          return Loginscreen();
+                        }),
+                    title: new Text(
+                      'Welcome In SplashScreen',
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                    image: new Image.network('https://i.imgur.com/TyCSG9A.png'),
+                    backgroundColor: Colors.white,
+                    styleTextUnderTheLoader: new TextStyle(),
+                    photoSize: 100.0,
+                    loaderColor: Colors.red),
             routes: {
               Test.routeName: (ctx) => Test(),
               Splash.routeName: (ctx) => Splash(),
@@ -54,7 +66,7 @@ class _MyAppState extends State<MyApp> {
               Communityadd.routeName: (ctx) => Communityadd(),
               Comments.routeName: (ctx) => Comments(),
               Register.routeName: (ctx) => Register(),
-              AddImage.routeName: (ctx)=> AddImage(), 
+              AddImage.routeName: (ctx) => AddImage(),
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(

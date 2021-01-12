@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageCom extends StatefulWidget {
   int index;
@@ -24,10 +25,10 @@ class _ImageComState extends State<ImageCom> {
               .doc(widget.index.toString())
               .update({'Likes': val.toString()});
         },
-        child: FadeInImage.assetNetwork(
-          image: widget.documents[widget.index].data()['Image'],
-          placeholder: 'assests/google.png',
-          placeholderScale: 4.0,
+        child: CachedNetworkImage(
+          imageUrl: widget.documents[widget.index].data()['Image'],
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
         ));
   }
 }

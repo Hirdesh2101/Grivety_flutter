@@ -20,6 +20,7 @@ class _RegisterState extends State<Register> {
     String email,
     String password,
     String username,
+    String gender,
     BuildContext ctx,
   ) async {
       UserCredential authResult;
@@ -33,16 +34,16 @@ class _RegisterState extends State<Register> {
           password: password,
         );
         final user = await FirebaseAuth.instance.currentUser;
-        //Navigator.of(context).pushReplacementNamed(AddImage.routeName);
+        
         FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
           'Name': username,
-          'Image':'',
+          'Image': gender,
           'Email':email,
           'Year': '',
           'Branch': '',
           'Admin': 'NO',
-        }
-        );
+        });
+        Navigator.of(context).pushReplacementNamed(AddImage.routeName);
     } on PlatformException catch (err) {
       var message = 'An error occurred, pelase check your credentials!';
 

@@ -19,18 +19,23 @@ class _VideoPlayercustomState extends State<VideoPlayercustom> {
         BetterPlayerDataSource(
           BetterPlayerDataSourceType.network,
           "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+          cacheConfiguration: BetterPlayerCacheConfiguration(
+              useCache: true,
+              maxCacheSize: 50 * 1024 * 1024,
+              maxCacheFileSize: 20 * 1024 * 1024),
         ),
         key: Key(widget.index),
         configuration: BetterPlayerConfiguration(
-          deviceOrientationsOnFullScreen: const [
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown
-          ],
           autoPlay: false,
-          placeholder:
-              Center(child: CircularProgressIndicator()),
+          controlsConfiguration: BetterPlayerControlsConfiguration(
+            enableFullscreen: false,
+            enableQualities: true,
+            enableSkips: false,
+          ),
+          placeholder: Center(child: CircularProgressIndicator()),
           showPlaceholderUntilPlay: true,
           aspectRatio: 16 / 9,
+          autoDispose: true,
         ),
       ),
     );

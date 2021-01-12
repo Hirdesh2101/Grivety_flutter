@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class News extends StatelessWidget {
   @override
@@ -34,11 +35,10 @@ class News extends StatelessWidget {
                         itemBuilder: (BuildContext context, int itemIndex) =>
                             Container(
                           child: Image.network(
-                                            documents[itemIndex]
-                                                .data()['Image'],
-                                            height: 100,
-                                            width: 250,
-                                          ),
+                            documents[itemIndex].data()['Image'],
+                            height: 100,
+                            width: 250,
+                          ),
                         ),
                       )
                     : GestureDetector(
@@ -85,6 +85,7 @@ class News extends StatelessWidget {
     );
   }
 }
+
 @override
 class SingleItem extends StatefulWidget {
   SingleItem(this.title, this.url);
@@ -105,11 +106,10 @@ class _SingleItemState extends State<SingleItem> {
           subtitle: Text(''),
           trailing: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Hero(
-              tag: 'item1',
-              child: Image.network(widget.url),
-
-              //Image.asset('assests/google.png'),
+            child: CachedNetworkImage(
+              imageUrl: widget.url,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ),
         ),
