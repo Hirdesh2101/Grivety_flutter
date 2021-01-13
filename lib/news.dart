@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class News extends StatelessWidget {
+class News extends StatefulWidget{
+  @override
+  _NewsState createState() => _NewsState();
+}
+
+class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
+   @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     // Firebase.initializeApp();

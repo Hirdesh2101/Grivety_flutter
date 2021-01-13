@@ -16,7 +16,7 @@ class LikeCom extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: Container(),
             );
           }
           final documents = snapshot.data.documents;
@@ -29,8 +29,8 @@ class LikeCom extends StatelessWidget {
                 Text(documents[0].data()['Likes'])
               ]),
               onPressed: () async {
-                int index = snapshot.data.docs[0].id;
-                String valr = documents[index].data()['Likes'];
+                String index = snapshot.data.docs[0].id;
+                String valr = snapshot.data.docs[0].data()['Likes'];
                 int val = int.parse(valr);
                 val++;
                 FirebaseFirestore.instance

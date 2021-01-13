@@ -11,7 +11,12 @@ class Communityadd extends StatefulWidget {
 class _CommunityaddState extends State<Communityadd> {
   TextEditingController _textEditingController = TextEditingController();
   bool _isUploading = false;
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _textEditingController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     _addQues() async {
@@ -23,7 +28,7 @@ class _CommunityaddState extends State<Communityadd> {
           .collection('Community')
           .doc(DateTime.now().toString())
           .set({
-        'Name': user.uid,
+        'uid': user.uid,
         'Question': _textEditingController.text,
         'Comments': [],
         'Image': '',

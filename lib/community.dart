@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_native_admob/native_admob_options.dart';
-//import 'package:flutter_native_admob/flutter_native_admob.dart';
-//import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/image_community.dart';
 import 'package:grivety/like_com.dart';
 import './video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import './list_tile_com.dart';
 
 class Community extends StatefulWidget {
@@ -15,33 +11,11 @@ class Community extends StatefulWidget {
   _CommunityState createState() => _CommunityState();
 }
 
-class _CommunityState extends State<Community> {
-  String s;
-  Future<void> _val()async{
-    final user = FirebaseAuth.instance.currentUser.uid;
-    await FirebaseFirestore.instance
-                .collection('Users')
-                .doc(user)
-                .get().then((value) async{s = await value.data()['Admin'];});
-  }
-  //static const _adUnitID = "<ca-app-pub-3940256099942544/2247696110>";
-  //final _controller = NativeAdmobController();
+class _CommunityState extends State<Community> with AutomaticKeepAliveClientMixin {
   @override
-  void initState() {
-    _val();
-    // TODO: implement initState
-    super.initState();
-  }
-  
-  @override
-  void dispose() {
-    // _controller.dispose();
-    super.dispose();
-  }
-
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
-    print(s);
     return Stack(
       children: [
         Container(
@@ -61,18 +35,8 @@ class _CommunityState extends State<Community> {
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
+                      key: Key(index.toString()),
                       children: [
-                        /* if (index % 3 == 0)
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: NativeAdmob(
-                             // options: NativeAdmobOptions(),
-                              adUnitID: _adUnitID,
-                              controller: _controller,
-                              loading: Center(child: CircularProgressIndicator()),
-                            ),
-                          ),*/
                         ListTileCommunity(documents, index),
                         Align(
                             alignment: Alignment.topLeft,

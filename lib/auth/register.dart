@@ -21,6 +21,8 @@ class _RegisterState extends State<Register> {
     String password,
     String username,
     String gender,
+    String branch,
+    String year,
     BuildContext ctx,
   ) async {
       UserCredential authResult;
@@ -39,8 +41,8 @@ class _RegisterState extends State<Register> {
           'Name': username,
           'Image': gender,
           'Email':email,
-          'Year': '',
-          'Branch': '',
+          'Year': year,
+          'Branch': branch,
           'Admin': 'NO',
         });
         Navigator.of(context).pushReplacementNamed(AddImage.routeName);

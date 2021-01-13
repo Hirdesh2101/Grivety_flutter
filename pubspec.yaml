@@ -34,6 +34,10 @@ dependencies:
   better_player: ^0.0.43
   fluttertoast: ^7.1.6
   cached_network_image: ^2.5.0
+  image_picker: ^0.6.7+21
+  flutter_email_sender: ^4.0.0
+  share: ^0.6.5+4
+  feedback: ^0.3.0
   #flutter_native_admob: ^2.1.0+3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

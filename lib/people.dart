@@ -1,82 +1,120 @@
 import 'package:flutter/material.dart';
+import './peoplefilter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class People extends StatefulWidget {
   @override
   _PeopleState createState() => _PeopleState();
 }
 
-class _PeopleState extends State<People> {
-  int _showing = 0;
+class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  String _branch;
+  String _year;
+  bool _isVisible = false;
+  void _run(int _showing1, int _showing2) {
+    switch (_showing1) {
+      case 1:
+        _branch = 'Computer Science';
+        break;
+      case 2:
+        _branch = 'Electronics and Communication';
+        break;
+      case 3:
+        _branch = 'Electrical';
+        break;
+      case 4:
+        _branch = 'Mechanical';
+        break;
+      case 5:
+        _branch = 'Chemical';
+        break;
+      case 6:
+        _branch = 'Civil';
+        break;
+      case 7:
+        _branch = 'Metallurgy';
+        break;
+      case 8:
+        _branch = 'Architecture';
+        break;
+    }
+    switch (_showing2) {
+      case 1:
+        _year = '1st';
+        break;
+      case 2:
+        _year = '2nd';
+        break;
+      case 3:
+        _year = '3rd';
+        break;
+      case 4:
+        _year = '4th';
+        break;
+      case 5:
+        _year = '5th';
+        break;
+    }
+    if (_showing1 != 0 && _showing2 != 0) {
+      setState(() {
+        _isVisible = true;
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: "Please Select Filters",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          // backgroundColor: Colors.red,
+          // textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  void _remove(){
+    setState(() {
+        _isVisible = false;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
+      body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width*0.40,
-              height: MediaQuery.of(context).size.height*0.09,
-              decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-              ),
-              borderRadius: BorderRadius.circular(25)),
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                isExpanded: true,
-                hint: Text('Select Branch'),
-                value: _showing,
-                items: [
-                  DropdownMenuItem(
-                    child: Text('Select Branch'),
-                    value: 0,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Computer Science'),
-                    value: 1,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Electronics and Communication'),
-                    value: 2,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Electrical'),
-                    value: 3,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Mechanical'),
-                    value: 4,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Chemical'),
-                    value: 5,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Civil'),
-                    value: 6,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Metallurgy'),
-                    value: 7,
-                  ),
-                  DropdownMenuItem(
-                    child: Text('Architecture'),
-                    value: 8,
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _showing = value;
-                  });
-                },
-              ),
-            ),
-              ),
-            ),
-          ),
+          PeopleFilter(_run,_remove),
+          if (_isVisible)
+            FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('Users')
+                    .where('Branch', isEqualTo: _branch)
+                    .where("Year", isEqualTo: _year)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  final documents = snapshot.data.documents;
+                  return Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (_, int index) {
+                        return ListTile(
+                          key: Key(index.toString()),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.red,
+                          ),
+                          title: Text(documents[index].data()['Name']),
+                        );
+                      },
+                      itemCount: documents.length,
+                    ),
+                  );
+                })
         ],
       ),
     );
