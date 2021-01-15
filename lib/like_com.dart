@@ -4,38 +4,27 @@ import './quest_pass.dart';
 import './comments.dart';
 
 class LikeCom extends StatelessWidget {
-  final String question;
-  LikeCom(this.question);
+  final int index;
+  dynamic documents;
+  LikeCom(this.documents, this.index);
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Community')
-            .where('Question', isEqualTo: question)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: Container(),
-            );
-          }
-          final documents = snapshot.data.documents;
-          List<dynamic> list = snapshot.data.docs[0]['Comments'];
-          return Row(children: [
+    List<dynamic> list = documents[index].data()['Comments'];
+    return Row(children: [
             FlatButton(
               child: Row(children: [
                 Icon(Icons.thumb_up_sharp),
                 SizedBox(height: 1, width: 8),
-                Text(documents[0].data()['Likes'])
+                Text(documents[index].data()['Likes'])
               ]),
               onPressed: () async {
-                String index = snapshot.data.docs[0].id;
-                String valr = snapshot.data.docs[0].data()['Likes'];
+                String index2 = documents[index].id;
+                String valr = documents[index].data()['Likes'];
                 int val = int.parse(valr);
                 val++;
                 FirebaseFirestore.instance
                     .collection('Community')
-                    .doc(index.toString())
+                    .doc(index2.toString())
                     .update({'Likes': val.toString()});
               },
             ),
@@ -46,11 +35,11 @@ class LikeCom extends StatelessWidget {
                 Text(list.length.toString())
               ]),
               onPressed: () {
+                print(documents[index].data()['Question']);
                 Navigator.of(context).pushNamed(Comments.routeName,
-                    arguments: QuesPass(documents[0].data()['Question']));
+                    arguments: QuesPass(documents[index].data()['Question']));
               },
             )
           ]);
-        });
   }
 }

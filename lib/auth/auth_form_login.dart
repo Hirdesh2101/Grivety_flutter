@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './register.dart';
+import './addImage.dart';
 
 class AuthFormLogin extends StatefulWidget {
   AuthFormLogin(
@@ -107,7 +108,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                     Center(
                       child: GestureDetector(
                           onTap: () => Navigator.of(context)
-                              .pushNamed(Register.routeName),
+                              .pushNamed(AddImage.routeName),
                           child: Text('New User Register Here')),
                     )
                   ],

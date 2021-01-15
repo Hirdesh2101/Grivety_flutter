@@ -23,7 +23,7 @@ class _CommunityaddState extends State<Communityadd> {
       setState(() {
         _isUploading = true;
       });
-      final user = await FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       await FirebaseFirestore.instance
           .collection('Community')
           .doc(DateTime.now().toString())

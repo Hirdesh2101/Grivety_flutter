@@ -15,7 +15,6 @@ class _CommentsState extends State<Comments> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _textEditingController.dispose();
     super.dispose();
   }
@@ -23,6 +22,7 @@ class _CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
     final QuesPass args = ModalRoute.of(context).settings.arguments;
+    print(args.ques);
     _addcomment() async {
       setState(() {
         _isUploading = true;
@@ -35,7 +35,7 @@ class _CommentsState extends State<Comments> {
           .then((value) {
         docu = value.docs[0].id;
       });
-      final user = await FirebaseAuth.instance.currentUser;
+      final user =  FirebaseAuth.instance.currentUser;
       var obj = [
         {'Com': _textEditingController.text, 'uid': user.uid}
       ];
@@ -43,7 +43,7 @@ class _CommentsState extends State<Comments> {
           .collection('Community')
           .doc(docu)
           .update({'Comments': FieldValue.arrayUnion(obj)});
-      _textEditingController.text = '';
+      _textEditingController.clear();
       setState(() {
         _isUploading = false;
       });
@@ -80,6 +80,7 @@ class _CommentsState extends State<Comments> {
                     }
                     // String docu = snapshot.data.docs[0].id;
                     List<dynamic> list = snapshot.data.docs[0]['Comments'];
+                    print(list);
                     if (list.length == 0) {
                       return Center(child: Text("No Comments Yet...."));
                     }
@@ -91,7 +92,6 @@ class _CommentsState extends State<Comments> {
                               leading: CircleAvatar(
                                   radius: 15, backgroundColor: Colors.red),
                               title: StreamBuilder(
-                                  key: Key(list[index]['uid']),
                                   stream: FirebaseFirestore.instance
                                       .collection('Users')
                                       .doc(list[index]['uid'])

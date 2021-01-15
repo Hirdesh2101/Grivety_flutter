@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share/share.dart';
 import 'package:grivety/community.dart';
 import './news.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_mailer/flutter_mailer.dart';
 import './people.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Test extends StatefulWidget {
   static const routeName = '/Test';
@@ -15,6 +16,7 @@ class Test extends StatefulWidget {
 class _TestState extends State<Test> {
   @override
   Widget build(BuildContext context) {
+    var user = FirebaseAuth.instance.currentUser.uid;
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -24,7 +26,21 @@ class _TestState extends State<Test> {
             child: ListView(
               children: <Widget>[
                 DrawerHeader(
-                  child: Text("Header"),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(),
+                      Text('Welcome'),
+                      StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('Users')
+                              .doc(user)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            return Text(snapshot.data.data()['Name']);
+                          }),
+                    ],
+                  ),
                 ),
                 ListTile(
                   leading: Icon(Icons.person),
@@ -53,21 +69,37 @@ class _TestState extends State<Test> {
                 ListTile(
                   title: Text('Report Bug'),
                   onTap: () async {
-                    final Email email = Email(
-                      body: 'Email body',
-                      subject: 'Email subject',
-                      recipients: ['example@example.com'],
-                      //cc: ['cc@example.com'],
-                      // bcc: ['bcc@example.com'],
-                      //attachmentPaths: ['/path/to/attachment.zip'],
+                    String platformResponse;
+                    final MailOptions mailOptions = MailOptions(
+                      subject: 'Bug Report',
+                      recipients: ['hirdeshgarg0012@gmail.com'],
                       isHTML: false,
                     );
-                    String platformResponse;
-                    try {
-                      await FlutterEmailSender.send(email);
-                      platformResponse = 'success';
-                    } catch (error) {
-                      platformResponse = error.toString();
+
+                    final MailerResponse response =
+                        await FlutterMailer.send(mailOptions);
+                    switch (response) {
+                      case MailerResponse.saved:
+
+                        /// ios only
+                        platformResponse = 'mail was saved to draft';
+                        break;
+                      case MailerResponse.sent:
+
+                        /// ios only
+                        platformResponse = 'mail was sent';
+                        break;
+                      case MailerResponse.cancelled:
+
+                        /// ios only
+                        platformResponse = 'mail was cancelled';
+                        break;
+                      case MailerResponse.android:
+                        platformResponse = 'intent was successful';
+                        break;
+                      default:
+                        platformResponse = 'unknown';
+                        break;
                     }
                     print(platformResponse);
                   },
@@ -86,20 +118,27 @@ class _TestState extends State<Test> {
               Tab(text: "News"),
               Tab(text: "Community"),
               Tab(text: "People"),
-              Tab(
-                text: "Book",
-              )
+              Tab(text: "Book")
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            News(),
-            Community(),
-            People(),
-            Center(child: Text('Coming Soon...'))
-          ],
-        ),
+        body: FutureBuilder(
+            future:
+                FirebaseFirestore.instance.collection('Users').doc(user).get(),
+            builder: (context, snapshot) {
+              var doc = snapshot.data;
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return TabBarView(
+                children: [
+                  News(doc['Admin']),
+                  Community(doc['Admin']),
+                  People(),
+                  Center(child: Text('Coming Soon...'))
+                ],
+              );
+            }),
       ),
     );
   }

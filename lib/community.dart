@@ -7,11 +7,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './list_tile_com.dart';
 
 class Community extends StatefulWidget {
+  final String admin;
+  Community(this.admin);
   @override
   _CommunityState createState() => _CommunityState();
 }
 
-class _CommunityState extends State<Community> with AutomaticKeepAliveClientMixin {
+class _CommunityState extends State<Community>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
   @override
@@ -33,11 +36,12 @@ class _CommunityState extends State<Community> with AutomaticKeepAliveClientMixi
                 }
                 final documents = snapshot.data.documents;
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
-                      key: Key(index.toString()),
+                      key: new ValueKey(index.toString()),
                       children: [
-                        ListTileCommunity(documents, index),
+                        ListTileCommunity(documents, index,widget.admin),
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
@@ -51,9 +55,7 @@ class _CommunityState extends State<Community> with AutomaticKeepAliveClientMixi
                           ImageCom(documents, index),
                         if (documents[index].data()['Video'] != '')
                           VideoPlayercustom(index.toString()),
-                        LikeCom(
-                          documents[index].data()['Question'],
-                        ),
+                        LikeCom(documents, index),
                         Divider(
                           thickness: 2,
                         )
@@ -69,6 +71,7 @@ class _CommunityState extends State<Community> with AutomaticKeepAliveClientMixi
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
+                heroTag: 'button_comm_add',
                   child: Icon(Icons.add),
                   onPressed: () {
                     Navigator.of(context).pushNamed(

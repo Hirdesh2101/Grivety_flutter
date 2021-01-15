@@ -41,7 +41,6 @@ class _MyAppState extends State<MyApp> {
                         builder: (ctx, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            Timer(const Duration(seconds: 2), () {});
                             return Splash();
                           }
                           if (userSnapshot.hasData) {

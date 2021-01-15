@@ -106,7 +106,7 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                         return ListTile(
                           key: Key(index.toString()),
                           leading: CircleAvatar(
-                            backgroundColor: Colors.red,
+                            backgroundImage: NetworkImage(documents[index].data()['Image']),
                           ),
                           title: Text(documents[index].data()['Name']),
                         );
