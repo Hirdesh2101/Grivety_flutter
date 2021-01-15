@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:grivety/auth/login.dart';
 import 'package:grivety/auth/register.dart';
 import 'package:grivety/comments.dart';
+import 'package:grivety/edit_profile.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/splash.dart';
@@ -35,7 +36,7 @@ class _MyAppState extends State<MyApp> {
             home: appshapshot.connectionState != ConnectionState.done
                 ? Splash()
                 : new SplashScreen(
-                    seconds: 5,
+                    seconds: 2,
                     navigateAfterSeconds: StreamBuilder(
                         stream: FirebaseAuth.instance.authStateChanges(),
                         builder: (ctx, userSnapshot) {
@@ -49,15 +50,15 @@ class _MyAppState extends State<MyApp> {
                           return Loginscreen();
                         }),
                     title: new Text(
-                      'Welcome In SplashScreen',
-                      style: new TextStyle(
+                      'Grivety',
+                      style: new TextStyle(color: Colors.white,
                           fontWeight: FontWeight.bold, fontSize: 20.0),
                     ),
-                    image: new Image.network('https://i.imgur.com/TyCSG9A.png'),
-                    backgroundColor: Colors.white,
+                    image: new Image.asset('assests/finalgrivitylogo.png'),
+                    backgroundColor: Colors.black26,
                     styleTextUnderTheLoader: new TextStyle(),
                     photoSize: 100.0,
-                    loaderColor: Colors.red),
+                    loaderColor: Colors.white),
             routes: {
               Test.routeName: (ctx) => Test(),
               Splash.routeName: (ctx) => Splash(),
@@ -66,6 +67,7 @@ class _MyAppState extends State<MyApp> {
               Comments.routeName: (ctx) => Comments(),
               Register.routeName: (ctx) => Register(),
               AddImage.routeName: (ctx) => AddImage(),
+              EditProfile.routeName : (ctx) => EditProfile(),
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(

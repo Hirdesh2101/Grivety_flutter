@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:better_player/better_player.dart';
 
 class VideoPlayercustom extends StatefulWidget {
-  VideoPlayercustom(this.index);
+  VideoPlayercustom(this.index,this.documents);
   final String index;
+  final dynamic documents;
 
   @override
   _VideoPlayercustomState createState() => _VideoPlayercustomState();
@@ -18,7 +18,7 @@ class _VideoPlayercustomState extends State<VideoPlayercustom> {
       child: BetterPlayerListVideoPlayer(
         BetterPlayerDataSource(
           BetterPlayerDataSourceType.network,
-          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+          widget.documents[widget.index].data()['Video'],
           cacheConfiguration: BetterPlayerCacheConfiguration(
               useCache: true,
               maxCacheSize: 50 * 1024 * 1024,

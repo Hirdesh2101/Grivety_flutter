@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './peoplefilter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import './custom_dailog.dart';
 
 class People extends StatefulWidget {
   @override
@@ -74,49 +75,81 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  void _remove(){
+  void _remove() {
     setState(() {
-        _isVisible = false;
-      });
+      _isVisible = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          PeopleFilter(_run,_remove),
-          if (_isVisible)
-            FutureBuilder(
-                future: FirebaseFirestore.instance
-                    .collection('Users')
-                    .where('Branch', isEqualTo: _branch)
-                    .where("Year", isEqualTo: _year)
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
+      body: Stack(
+              children: [Column(
+          children: [
+            PeopleFilter(_run, _remove),
+            if (_isVisible)
+              FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('Users')
+                      .where('Branch', isEqualTo: _branch)
+                      .where("Year", isEqualTo: _year)
+                      .get(),
+                  builder: (_, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    final documents = snapshot.data.documents;
+                    return Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (_, int index) {
+                          return ListTile(
+                              key: Key(index.toString()),
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    (documents[index].data()['Image'] == 'Male' ||
+                                            documents[index].data()['Image'] ==
+                                                'Female')
+                                        ? documents[index].data()['Image'] ==
+                                                'Male'
+                                            ? AssetImage("assests/male.jpg")
+                                            : AssetImage("assests/female.jpg")
+                                        : NetworkImage(
+                                            documents[index].data()['Image']),
+                              ),
+                              title: Text(documents[index].data()['Name']),
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomDialogBox(
+                                        title: documents[index].data()['Name'],
+                                        img: documents[index].data()['Image'],
+                                        text: 'Close',
+                                        descriptions: documents[index]
+                                                    .data()['Description'] ==
+                                                null
+                                            ? "No Description"
+                                            : documents[index]
+                                                .data()['Description'],
+                                        branch: documents[index].data()['Branch'],
+                                      );
+                                    });
+                              });
+                        },
+                        itemCount: documents.length,
+                      ),
                     );
-                  }
-                  final documents = snapshot.data.documents;
-                  return Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (_, int index) {
-                        return ListTile(
-                          key: Key(index.toString()),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(documents[index].data()['Image']),
-                          ),
-                          title: Text(documents[index].data()['Name']),
-                        );
-                      },
-                      itemCount: documents.length,
-                    ),
-                  );
-                })
-        ],
+                  })
+          ],
+        ),
+        if(!_isVisible)Align(alignment:Alignment.center,child:Text("Select Filters..."))
+        ]
+
       ),
+
     );
   }
 }

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 
 class AddImage extends StatefulWidget {
@@ -15,10 +16,11 @@ class AddImage extends StatefulWidget {
 class _AddImageState extends State<AddImage> {
   File _image;
   final picker = ImagePicker();
+  bool _isUploading = false;
   String url;
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery,imageQuality: 40);
 
     setState(() {
       if (pickedFile != null) {
@@ -33,20 +35,32 @@ class _AddImageState extends State<AddImage> {
       }
     });
   }
+
   var user = FirebaseAuth.instance.currentUser.uid;
-  /*Future<void> _uploadFile(File img) async {
-  try {
-    await firebase_storage.FirebaseStorage.instance
-        .ref('profiles/$user.jpg')
-        .putFile(img);
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-      .ref('profiles/$user.jpg')
-      .getDownloadURL();    
+  Future<void> _uploadFile(File img) async {
+    try {
+      setState(() {
+        _isUploading = true;
+      });
+      await firebase_storage.FirebaseStorage.instance
+          .ref('profiles/$user.jpg')
+          .putFile(img);
+      String downloadURL = await firebase_storage.FirebaseStorage.instance
+          .ref('profiles/$user.jpg')
+          .getDownloadURL();
       url = downloadURL;
-  } on firebase_core.FirebaseException catch (e) {
-    // e.g, e.code == 'canceled'
+      if (downloadURL != null) {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user)
+            .update({"Image": downloadURL});
+      }
+      Navigator.of(context).pop();
+    } on firebase_core.FirebaseException catch (e) {
+      print(e);
+    }
   }
-}*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,15 +88,16 @@ class _AddImageState extends State<AddImage> {
             _image != null
                 ? FlatButton(
                     child: Text('Add'),
-                    onPressed: () {
-                       // _uploadFile(_image);
-                     // if(url!=null) print(url);
+                    onPressed: _isUploading?null:() {
+                      _uploadFile(_image);
+                      print(url);
                     },
                   )
                 : Container(),
+            _isUploading?Center(child:CircularProgressIndicator()):Container(),    
             FlatButton(
               child: Text('Skip'),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: _isUploading?null:()=>Navigator.of(context).pop(),
             )
           ],
         ),

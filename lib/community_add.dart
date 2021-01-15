@@ -13,7 +13,6 @@ class _CommunityaddState extends State<Communityadd> {
   bool _isUploading = false;
   @override
   void dispose() {
-    // TODO: implement dispose
     _textEditingController.dispose();
     super.dispose();
   }
@@ -61,11 +60,26 @@ class _CommunityaddState extends State<Communityadd> {
         child: Container(
           child: Column(
             children: [
-              Card(
-                color: Colors.blueAccent,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Keep these points in mind"),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    color: Colors.blueAccent,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(child: Text("Keep these points in mind :")),
+                          SizedBox(height: 5 ),
+                          Text("* ASK ONLY RELAVENT QUESTIONS"),
+                          Text('* POST WILL BE REMOVED IF FOUND IRRELEVANT'),
+                          Text("* CURRRENTLY ONLY ADMINS CAN POST IMAGES OR VIDEO IN THIS SECTION"),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Padding(

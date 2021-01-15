@@ -54,7 +54,7 @@ class _CommunityState extends State<Community>
                         if (documents[index].data()['Image'] != '')
                           ImageCom(documents, index),
                         if (documents[index].data()['Video'] != '')
-                          VideoPlayercustom(index.toString()),
+                          VideoPlayercustom(index.toString(),documents),
                         LikeCom(documents, index),
                         Divider(
                           thickness: 2,

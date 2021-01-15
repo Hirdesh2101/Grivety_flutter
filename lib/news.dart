@@ -18,7 +18,6 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
     // Firebase.initializeApp();
     return Stack(
       children: [
-        
         Container(
           key: new PageStorageKey('nsnx'),
           child: StreamBuilder(
@@ -34,25 +33,38 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                 return new ListView.builder(
                   itemBuilder: (_, int index) {
                     return index == 0
-                        ? CarouselSlider.builder(
-                            options: CarouselOptions(
-                              pageViewKey: PageStorageKey('xn'),
-                              initialPage: 0,
-                              autoPlay: true,
-                              aspectRatio: 2.0,
-                              enlargeCenterPage: true,
-                            ),
-                            itemCount: documents.length,
-                            itemBuilder:
-                                (BuildContext context, int itemIndex) =>
-                                    Container(
-                              child: Image.network(
-                                documents[itemIndex].data()['Image'],
-                                height: 100,
-                                width: 250,
-                              ),
-                            ),
-                          )
+                        ? StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection('Slider').snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                final documents1 = snapshot.data.documents;
+                            return CarouselSlider.builder(
+                                options: CarouselOptions(
+                                  pageViewKey: PageStorageKey('xn'),
+                                  initialPage: 0,
+                                  autoPlay: true,
+                                  aspectRatio: 2.0,
+                                  enlargeCenterPage: true,
+                                ),
+                                itemCount: documents1.length,
+                                itemBuilder:
+                                    (BuildContext context, int itemIndex) =>
+                                        Container(
+                                  child: CachedNetworkImage(
+                                    imageUrl: documents1[itemIndex].data()['Image'],
+                                    placeholder: (context, url) =>
+                                        Center(child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
+                                ),
+                              );
+                          }
+                        )
                         : GestureDetector(
                             child: SingleItem(documents[index].data()['Title'],
                                 documents[index].data()['Image']),
@@ -69,7 +81,9 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                   builder: (context) => Wrap(children: [
                                         Container(
                                           child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
+                                              SizedBox(height: 15,),
                                               Align(
                                                   alignment: Alignment.center,
                                                   child: Image.network(
@@ -85,8 +99,18 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                                             .size
                                                             .width,
                                                   )),
-                                              Text(documents[index]
-                                                  .data()['Data']),
+                                              Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(12.0),
+                                                  child: Text(documents[index]
+                                                      .data()['Title'],style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                                                ),
+                                              ),
+                                              Padding(
+                                                  padding: const EdgeInsets.all(12.0),
+                                                  child: Text(documents[index]
+                                                      .data()['Data'],style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                                                ),
                                             ],
                                           ),
                                         ),
@@ -98,16 +122,17 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                 );
               }),
         ),
-        if (widget.admin=='Yes')Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              heroTag: 'button_news_add',
-              child: Icon(Icons.add),
-              onPressed: (){},),
-          )
-        ),
+        if (widget.admin == 'Yes')
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                  heroTag: 'button_news_add',
+                  child: Icon(Icons.add),
+                  onPressed: () {},
+                ),
+              )),
       ],
     );
   }

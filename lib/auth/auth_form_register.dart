@@ -138,6 +138,7 @@ class _AuthFormState extends State<AuthForm> {
       backgroundColor: Colors.blue,
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Card(

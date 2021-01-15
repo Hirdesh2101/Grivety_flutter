@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageCom extends StatefulWidget {
-  int index;
-  dynamic documents;
+  final int index;
+  final dynamic documents;
   ImageCom(this.documents, this.index);
 
   @override

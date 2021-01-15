@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class PeopleFilter extends StatefulWidget {
-  Function(
+  final Function(
     int _showing1,
     int _showing2,
   ) _run;
-  Function()_remove;
+  final Function()_remove;
   PeopleFilter(this._run,this._remove);
   @override
   _PeopleFilterState createState() => _PeopleFilterState();

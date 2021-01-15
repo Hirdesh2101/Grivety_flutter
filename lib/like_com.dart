@@ -5,7 +5,7 @@ import './comments.dart';
 
 class LikeCom extends StatelessWidget {
   final int index;
-  dynamic documents;
+  final dynamic documents;
   LikeCom(this.documents, this.index);
   @override
   Widget build(BuildContext context) {

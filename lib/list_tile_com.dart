@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 enum MenuOption { Report, Delete }
 
@@ -9,7 +8,7 @@ class ListTileCommunity extends StatelessWidget {
   final dynamic documents;
   final int index;
   final String admin;
-  ListTileCommunity(this.documents, this.index,this.admin);
+  ListTileCommunity(this.documents, this.index, this.admin);
   @override
   Widget build(BuildContext context) {
     //print(admin);
@@ -23,19 +22,25 @@ class ListTileCommunity extends StatelessWidget {
           final data = snapshot.data;
           if (!snapshot.hasData) {
             return ListTile(
-              leading: ClipOval(child: CircleAvatar(backgroundColor: Colors.white,)),
+              leading: ClipOval(
+                  child: CircleAvatar(
+                backgroundColor: Colors.black26,
+              )),
+              title: Text(''),
               subtitle: Text(''),
             );
           }
           return ListTile(
-            leading: ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: data['Image'],
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.black38,
+              backgroundImage:
+                  (data['Image'] == 'Male' || data['Image'] == 'Female')
+                      ? data['Image'] == 'Male'
+                          ? AssetImage("assests/male.jpg")
+                          : AssetImage("assests/female.jpg")
+                      : NetworkImage(data['Image']),
             ),
-            title: Text(documents[index].data()['Name']),
+            title: Text(data['Name']),
             subtitle: Text(data['Year']),
             trailing: PopupMenuButton(
               itemBuilder: (BuildContext context) {

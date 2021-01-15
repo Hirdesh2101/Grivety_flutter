@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './register.dart';
-import './addImage.dart';
 
 class AuthFormLogin extends StatefulWidget {
   AuthFormLogin(
@@ -43,6 +42,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
       backgroundColor: Colors.blue,
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Card(
@@ -90,26 +90,39 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                         _userPassword = value;
                       },
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: 5),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                        GestureDetector(
+                          child:Text('Forgot Password ?',style: TextStyle(fontSize:12),),
+                          onTap:(){}
+                        )
+                      ],),
+                    SizedBox(height: 10),
                     if (widget.isLoading) CircularProgressIndicator(),
                     if (!widget.isLoading)
-                      RaisedButton(
-                        color: Color.fromARGB(255, 0, 171, 227),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
+                      Container(
+                        width: MediaQuery.of(context).size.width*0.55,
+                        child: RaisedButton(
+                          color: Color.fromARGB(255, 0, 171, 227),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
+                          onPressed: _trySubmit,
                         ),
-                        onPressed: _trySubmit,
                       ),
+                      SizedBox(height:5),
                     Center(
                       child: GestureDetector(
                           onTap: () => Navigator.of(context)
-                              .pushNamed(AddImage.routeName),
-                          child: Text('New User Register Here')),
+                              .pushNamed(Register.routeName),
+                          child: Text('New User? Register Here',style: TextStyle(fontSize:12),)),
                     )
                   ],
                 ),
