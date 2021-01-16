@@ -73,7 +73,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               radius: Constants.avatarRadius,
               child: CircleAvatar(
                 radius: 45,
-                  backgroundImage: NetworkImage(widget.img)
+                  backgroundImage: (widget.img == 'Male' || widget.img == 'Female')
+                      ? widget.img == 'Male'
+                          ? AssetImage("assests/male.jpg")
+                          : AssetImage("assests/female.jpg")
+                      : NetworkImage(widget.img)
               ),
             ),
         ),

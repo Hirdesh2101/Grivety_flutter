@@ -3,7 +3,7 @@ import 'package:better_player/better_player.dart';
 
 class VideoPlayercustom extends StatefulWidget {
   VideoPlayercustom(this.index,this.documents);
-  final String index;
+  final int index;
   final dynamic documents;
 
   @override
@@ -13,6 +13,7 @@ class VideoPlayercustom extends StatefulWidget {
 class _VideoPlayercustomState extends State<VideoPlayercustom> {
   @override
   Widget build(BuildContext context) {
+    int key = widget.index;
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: BetterPlayerListVideoPlayer(
@@ -21,10 +22,10 @@ class _VideoPlayercustomState extends State<VideoPlayercustom> {
           widget.documents[widget.index].data()['Video'],
           cacheConfiguration: BetterPlayerCacheConfiguration(
               useCache: true,
-              maxCacheSize: 50 * 1024 * 1024,
-              maxCacheFileSize: 20 * 1024 * 1024),
+              maxCacheSize: 40 * 1024 * 1024,
+              maxCacheFileSize: 10 * 1024 * 1024),
         ),
-        key: Key(widget.index),
+        key: Key(key.toString()),
         configuration: BetterPlayerConfiguration(
           autoPlay: false,
           controlsConfiguration: BetterPlayerControlsConfiguration(

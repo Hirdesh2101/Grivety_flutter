@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:grivety/addnews.dart';
 
 class News extends StatefulWidget {
   final String admin;
@@ -13,6 +14,59 @@ class News extends StatefulWidget {
 class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
+  void _sheet(dynamic documents, int index) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(10),
+          topRight: const Radius.circular(10),
+        )),
+        isDismissible: true,
+        builder: (context) => Wrap(children: [
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: FadeInImage(
+                          placeholder: AssetImage('assests/loading.png'),
+                          image: NetworkImage(
+                            documents[index].data()['Image'],
+                          ),
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          width: MediaQuery.of(context).size.width,
+                        )),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(
+                          documents[index].data()['Title'],
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        documents[index].data()['Data'],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]));
+  }
+
   @override
   Widget build(BuildContext context) {
     // Firebase.initializeApp();
@@ -34,15 +88,18 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                   itemBuilder: (_, int index) {
                     return index == 0
                         ? StreamBuilder(
-                          stream: FirebaseFirestore.instance.collection('Slider').snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final documents1 = snapshot.data.documents;
-                            return CarouselSlider.builder(
+                            stream: FirebaseFirestore.instance
+                                .collection('Slider')
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              final documents1 = snapshot.data.documents;
+                              return CarouselSlider.builder(
                                 options: CarouselOptions(
                                   pageViewKey: PageStorageKey('xn'),
                                   initialPage: 0,
@@ -55,68 +112,99 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                     (BuildContext context, int itemIndex) =>
                                         Container(
                                   child: CachedNetworkImage(
-                                    imageUrl: documents1[itemIndex].data()['Image'],
-                                    placeholder: (context, url) =>
-                                        Center(child: CircularProgressIndicator()),
+                                    imageUrl:
+                                        documents1[itemIndex].data()['Image'],
+                                    placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator()),
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
                                   ),
                                 ),
                               );
-                          }
-                        )
-                        : GestureDetector(
-                            child: SingleItem(documents[index].data()['Title'],
-                                documents[index].data()['Image']),
-                            onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                    topLeft: const Radius.circular(10),
-                                    topRight: const Radius.circular(10),
-                                  )),
-                                  isDismissible: true,
-                                  builder: (context) => Wrap(children: [
-                                        Container(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(height: 15,),
-                                              Align(
-                                                  alignment: Alignment.center,
-                                                  child: Image.network(
-                                                    documents[index]
-                                                        .data()['Image'],
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.25,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                  )),
-                                              Center(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(12.0),
-                                                  child: Text(documents[index]
-                                                      .data()['Title'],style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
-                                                ),
-                                              ),
-                                              Padding(
-                                                  padding: const EdgeInsets.all(12.0),
-                                                  child: Text(documents[index]
-                                                      .data()['Data'],style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
-                                                ),
-                                            ],
-                                          ),
+                            })
+                        : widget.admin == 'Yes'
+                            ? Dismissible(
+                                background: Container(
+                                  color: Colors.red,
+                                  child: Align(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
                                         ),
-                                      ]));
-                            },
-                          );
+                                        Text(
+                                          " Delete",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                      ],
+                                    ),
+                                    alignment: Alignment.centerRight,
+                                  ),
+                                ),
+                                key: Key(documents[index].data()['Title']),
+                                direction: DismissDirection.startToEnd,
+                                child: GestureDetector(
+                                  child: SingleItem(
+                                      documents[index].data()['Title'],
+                                      documents[index].data()['Image']),
+                                  onTap: () {
+                                    _sheet(documents, index);
+                                  },
+                                ),
+                                confirmDismiss: (direction) async {
+                                    final bool res = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            content: Text(
+                                                "Are you sure you want to delete ?"),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text(
+                                                  "Cancel",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              FlatButton(
+                                                child: Text(
+                                                  "Delete",
+                                                  style: TextStyle(
+                                                      color: Colors.red),
+                                                ),
+                                                onPressed: () {
+                                                  FirebaseFirestore.instance.collection('News').doc(documents[index].id).delete();
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                    return res;
+                                  
+                                },
+                              )
+                            : GestureDetector(
+                                child: SingleItem(
+                                    documents[index].data()['Title'],
+                                    documents[index].data()['Image']),
+                                onTap: () {
+                                  _sheet(documents, index);
+                                },
+                              );
                   },
                   itemCount: documents.length,
                 );
@@ -130,7 +218,8 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                 child: FloatingActionButton(
                   heroTag: 'button_news_add',
                   child: Icon(Icons.add),
-                  onPressed: () {},
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(AddNews.routeName),
                 ),
               )),
       ],

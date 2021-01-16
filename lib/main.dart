@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:grivety/addnews.dart';
 import 'package:grivety/auth/addImage.dart';
 import 'dart:async';
 
@@ -49,11 +50,6 @@ class _MyAppState extends State<MyApp> {
                           }
                           return Loginscreen();
                         }),
-                    title: new Text(
-                      'Grivety',
-                      style: new TextStyle(color: Colors.white,
-                          fontWeight: FontWeight.bold, fontSize: 20.0),
-                    ),
                     image: new Image.asset('assests/finalgrivitylogo.png'),
                     backgroundColor: Colors.black26,
                     styleTextUnderTheLoader: new TextStyle(),
@@ -68,6 +64,7 @@ class _MyAppState extends State<MyApp> {
               Register.routeName: (ctx) => Register(),
               AddImage.routeName: (ctx) => AddImage(),
               EditProfile.routeName : (ctx) => EditProfile(),
+              AddNews.routeName: (ctx) => AddNews(),
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(

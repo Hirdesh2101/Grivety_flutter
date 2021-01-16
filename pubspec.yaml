@@ -64,6 +64,7 @@ flutter:
      - assests/finalgrivitylogo.png
      - assests/male.jpg
      - assests/female.jpg
+     - assests/loading.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grivety/quest_pass.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Comments extends StatefulWidget {
   static const routeName = '/comments';
@@ -24,29 +25,38 @@ class _CommentsState extends State<Comments> {
     final QuesPass args = ModalRoute.of(context).settings.arguments;
     print(args.ques);
     _addcomment() async {
-      setState(() {
-        _isUploading = true;
-      });
-      String docu = '';
-      await FirebaseFirestore.instance
-          .collection('Community')
-          .where('Question', isEqualTo: args.ques)
-          .get()
-          .then((value) {
-        docu = value.docs[0].id;
-      });
-      final user =  FirebaseAuth.instance.currentUser;
-      var obj = [
-        {'Com': _textEditingController.text, 'uid': user.uid}
-      ];
-      await FirebaseFirestore.instance
-          .collection('Community')
-          .doc(docu)
-          .update({'Comments': FieldValue.arrayUnion(obj)});
-      _textEditingController.clear();
-      setState(() {
-        _isUploading = false;
-      });
+      if (_textEditingController.text != '') {
+        setState(() {
+          _isUploading = true;
+        });
+        String docu = '';
+        await FirebaseFirestore.instance
+            .collection('Community')
+            .where('Question', isEqualTo: args.ques)
+            .get()
+            .then((value) {
+          docu = value.docs[0].id;
+        });
+        final user = FirebaseAuth.instance.currentUser;
+        var obj = [
+          {'Com': _textEditingController.text, 'uid': user.uid}
+        ];
+        await FirebaseFirestore.instance
+            .collection('Community')
+            .doc(docu)
+            .update({'Comments': FieldValue.arrayUnion(obj)});
+        _textEditingController.clear();
+        setState(() {
+          _isUploading = false;
+        });
+      } else {
+        Fluttertoast.showToast(
+            msg: "Enter a valid Comment",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      }
     }
 
     return Scaffold(
@@ -88,22 +98,36 @@ class _CommentsState extends State<Comments> {
                       itemBuilder: (_, int index) {
                         return Column(
                           children: [
-                            ListTile(
-                              leading: CircleAvatar(
-                                  radius: 15, backgroundColor: Colors.red),
-                              title: StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('Users')
-                                      .doc(list[index]['uid'])
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    final data = snapshot.data;
-                                    if (!snapshot.hasData) {
-                                      return Container();
-                                    }
-                                    return Text(data["Name"]);
-                                  }),
-                            ),
+                            StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(list[index]['uid'])
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  final data = snapshot.data;
+                                  if (!snapshot.hasData) {
+                                    return ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.black26,
+                                      ),
+                                      title: Text(''),
+                                    );
+                                  }
+                                  return ListTile(
+                                    leading: CircleAvatar(
+                                        radius: 15,
+                                        backgroundImage: (data['Image'] ==
+                                                    'Male' ||
+                                                data['Image'] == 'Female')
+                                            ? data['Image'] == 'Male'
+                                                ? AssetImage("assests/male.jpg")
+                                                : AssetImage(
+                                                    "assests/female.jpg")
+                                            : NetworkImage(data['Image'])),
+                                    title: Text(data['Name']),
+                                  );
+                                }),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
                                   18.0, 0.0, 8.0, 8.0),
@@ -143,27 +167,27 @@ class _CommentsState extends State<Comments> {
                   ),
                 ),
                 //Expanded(child: SizedBox()),
-                Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.17,
-                    child: RaisedButton(
-                      disabledColor: Colors.grey,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(13),
-                      // RoundedRectangleBorder(
-                      //    borderRadius: BorderRadius.all(Radius.circular(200))),
-                      onPressed: _isUploading ? null : _addcomment,
-                      child: Icon(Icons.send),
-                    ),
-                  ),
-                )
+                _isUploading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.17,
+                          child: RaisedButton(
+                            disabledColor: Colors.grey,
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(13),
+                            // RoundedRectangleBorder(
+                            //    borderRadius: BorderRadius.all(Radius.circular(200))),
+                            onPressed: _isUploading ? null : _addcomment,
+                            child: Icon(Icons.send),
+                          ),
+                        ),
+                      )
               ],
             ),
-            if (_isUploading)
-              Center(
-                child: CircularProgressIndicator(),
-              ),
           ],
         ),
       ),
