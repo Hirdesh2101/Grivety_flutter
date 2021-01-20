@@ -21,7 +21,8 @@ class _SliderAddState extends State<SliderAdd> {
   String url;
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery,imageQuality: 25);
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 25);
 
     setState(() {
       if (pickedFile != null) {
@@ -42,7 +43,7 @@ class _SliderAddState extends State<SliderAdd> {
       setState(() {
         _isUploading = true;
       });
-      Key s =UniqueKey();
+      Key s = UniqueKey();
       String temp = s.toString();
       await firebase_storage.FirebaseStorage.instance
           .ref('slider/$temp')
@@ -57,45 +58,45 @@ class _SliderAddState extends State<SliderAdd> {
             .add({"Image": downloadURL});
       }
       Fluttertoast.showToast(
-            msg: "Successfully Added",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: 16.0);
+          msg: "Successfully Added",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
       setState(() {
         _isUploading = false;
       });
     } on firebase_core.FirebaseException catch (e) {
       print(e);
       Fluttertoast.showToast(
-            msg: "Error.. Please Try again",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: 16.0);
+          msg: "Error.. Please Try again",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-     
-        margin: MediaQuery.of(context).padding,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
+      margin: MediaQuery.of(context).padding,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+              child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _image == null
                 ? Text('No image selected.')
                 : Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Image.file(_image),
-                ),
-                  
+                    padding: const EdgeInsets.all(18.0),
+                    child: Image.file(_image),
+                  ),
             FlatButton(
-              onPressed: _isUploading ? null :getImage,
+              onPressed: _isUploading ? null : getImage,
               child: Icon(
                 Icons.add_a_photo,
                 size: 35,
@@ -104,13 +105,19 @@ class _SliderAddState extends State<SliderAdd> {
             _image != null
                 ? FlatButton(
                     child: Text('Add to slider'),
-                    onPressed: _isUploading?null:() {
-                      _uploadFile(_image);
-                    },
+                    onPressed: _isUploading
+                        ? null
+                        : () {
+                            _uploadFile(_image);
+                          },
                   )
                 : Container(),
-            _isUploading?Center(child:CircularProgressIndicator()):Container(),
-          ],),
+            _isUploading
+                ? Center(child: CircularProgressIndicator())
+                : Container(),
+          ],
+        ),
+      ),
     );
   }
 }

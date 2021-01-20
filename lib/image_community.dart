@@ -26,6 +26,7 @@ class _ImageComState extends State<ImageCom> {
               .update({'Likes': val.toString()});
         },
         child: CachedNetworkImage(
+          cacheKey: widget.documents[widget.index].data()['Image'],
           imageUrl: widget.documents[widget.index].data()['Image'],
           placeholder: (context, url) => CircularProgressIndicator(),
           errorWidget: (context, url, error) => Icon(Icons.error),

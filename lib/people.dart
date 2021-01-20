@@ -83,6 +83,7 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: Stack(
               children: [Column(
@@ -104,6 +105,7 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                     final documents = snapshot.data.documents;
                     return Expanded(
                       child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (_, int index) {
                           return ListTile(
                               key: Key(index.toString()),

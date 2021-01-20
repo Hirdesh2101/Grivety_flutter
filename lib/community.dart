@@ -19,6 +19,7 @@ class _CommunityState extends State<Community>
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Stack(
       children: [
         Container(
@@ -36,6 +37,7 @@ class _CommunityState extends State<Community>
                 }
                 final documents = snapshot.data.documents;
                 return ListView.builder(
+                  cacheExtent: 1500,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     return Column(

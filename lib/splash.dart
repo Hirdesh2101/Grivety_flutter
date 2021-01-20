@@ -5,7 +5,7 @@ class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Loading...'),
+      child: Icon(Icons.update),
     );
   }
 }

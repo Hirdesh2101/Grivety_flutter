@@ -19,13 +19,13 @@ class _LoginscreenState extends State<Loginscreen> {
     String username,
     BuildContext ctx,
   ) async {
-    UserCredential authResult;
+    //UserCredential authResult;
 
     try {
       setState(() {
         _isLoading = true;
       });
-      authResult = await _auth.signInWithEmailAndPassword(
+       await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -37,7 +37,7 @@ class _LoginscreenState extends State<Loginscreen> {
         message = err.message;
       }
 
-      Scaffold.of(ctx).showSnackBar(
+      ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
           content: Text(message),
           backgroundColor: Theme.of(ctx).errorColor,

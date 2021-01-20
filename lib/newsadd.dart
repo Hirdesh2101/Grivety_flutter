@@ -92,86 +92,89 @@ class _NewsAddState extends State<NewsAdd> {
       margin: MediaQuery.of(context).padding,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _image == null
-                ? Text('No image selected.')
-                : Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Image.file(
-                      _image,
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      height: MediaQuery.of(context).size.height * 0.20,
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+              child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _image == null
+                  ? Text('No image selected.')
+                  : Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Image.file(
+                        _image,
+                        width: MediaQuery.of(context).size.width * 0.75,
+                        height: MediaQuery.of(context).size.height * 0.20,
+                      ),
                     ),
-                  ),
-            FlatButton(
-              onPressed: _isUploading ? null : getImage,
-              child: Icon(
-                Icons.add_a_photo,
-                size: 35,
+              FlatButton(
+                onPressed: _isUploading ? null : getImage,
+                child: Icon(
+                  Icons.add_a_photo,
+                  size: 35,
+                ),
               ),
-            ),
-            if (_isUploading) Center(child: CircularProgressIndicator()),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                enabled: _isUploading ? false : true,
-                decoration: InputDecoration(
-                    hintText: "Enter Title",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
-                controller: _textEditingController,
-                maxLines: null,
-                minLines: null,
-                autocorrect: false,
-                textCapitalization: TextCapitalization.sentences,
-                //expands:true,
+              if (_isUploading) Center(child: CircularProgressIndicator()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  enabled: _isUploading ? false : true,
+                  decoration: InputDecoration(
+                      hintText: "Enter Title",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)))),
+                  controller: _textEditingController,
+                  maxLines: null,
+                  minLines: null,
+                  autocorrect: false,
+                  textCapitalization: TextCapitalization.sentences,
+                  //expands:true,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                enabled: _isUploading ? false : true,
-                decoration: InputDecoration(
-                    hintText: "Enter Data",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
-                controller: _textEditingController2,
-                maxLines: null,
-                minLines: null,
-                autocorrect: false,
-                textCapitalization: TextCapitalization.sentences,
-                //expands:true,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  enabled: _isUploading ? false : true,
+                  decoration: InputDecoration(
+                      hintText: "Enter Data",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)))),
+                  controller: _textEditingController2,
+                  maxLines: null,
+                  minLines: null,
+                  autocorrect: false,
+                  textCapitalization: TextCapitalization.sentences,
+                  //expands:true,
+                ),
               ),
-            ),
-            RaisedButton(
-              onPressed: _isUploading
-                  ? null
-                  : () {
-                      if (_image != null &&
-                          _textEditingController.text != '' &&
-                          _textEditingController2.text != '') {
-                        setState(() {
-                          _isUploading = true;
-                        });
-                        _uploadFile(_image, _textEditingController.text,
-                            _textEditingController2.text);
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Fields can't be empty",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            fontSize: 16.0);
-                      }
-                    },
-              child: Text('Add'),
-            )
-          ],
+              RaisedButton(
+                onPressed: _isUploading
+                    ? null
+                    : () {
+                        if (_image != null &&
+                            _textEditingController.text != '' &&
+                            _textEditingController2.text != '') {
+                          setState(() {
+                            _isUploading = true;
+                          });
+                          _uploadFile(_image, _textEditingController.text,
+                              _textEditingController2.text);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Fields can't be empty",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              fontSize: 16.0);
+                        }
+                      },
+                child: Text('Add'),
+              )
+            ],
+          ),
         ),
       ),
     );

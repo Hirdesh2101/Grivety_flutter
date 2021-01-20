@@ -25,13 +25,13 @@ class _RegisterState extends State<Register> {
     String year,
     BuildContext ctx,
   ) async {
-      UserCredential authResult;
+      //UserCredential authResult;
 
     try {
       setState(() {
         _isLoading = true;
       });
-        authResult = await _auth.createUserWithEmailAndPassword(
+        await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -53,7 +53,7 @@ class _RegisterState extends State<Register> {
         message = err.message;
       }
 
-      Scaffold.of(ctx).showSnackBar(
+      ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
           content: Text(message),
           backgroundColor: Theme.of(ctx).errorColor,

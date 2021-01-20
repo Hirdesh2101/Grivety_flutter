@@ -145,8 +145,8 @@ class _EditProfileState extends State<EditProfile> {
                           ? (snapshot.data.data()['Image'] == 'Male' ||
                                   snapshot.data.data()['Image'] == 'Female')
                               ? snapshot.data.data()['Image'] == 'Male'
-                                  ? AssetImage("assests/male.jpg")
-                                  : AssetImage("assests/female.jpg")
+                                  ? CircleAvatar(radius:85,backgroundImage: AssetImage("assests/male.jpg"))
+                                  : CircleAvatar(radius:85,backgroundImage:AssetImage("assests/female.jpg"))
                               : CircleAvatar(
                                   radius: 85,
                                   backgroundImage: NetworkImage(

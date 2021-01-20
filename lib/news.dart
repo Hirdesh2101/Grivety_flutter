@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:grivety/addnews.dart';
+import 'package:grivety/news_dtail.dart';
+import './quest_pass.dart';
 
 class News extends StatefulWidget {
   final String admin;
@@ -16,59 +18,12 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   void _sheet(dynamic documents, int index) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(10),
-          topRight: const Radius.circular(10),
-        )),
-        isDismissible: true,
-        builder: (context) => Wrap(children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: FadeInImage(
-                          placeholder: AssetImage('assests/loading.png'),
-                          image: NetworkImage(
-                            documents[index].data()['Image'],
-                          ),
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          width: MediaQuery.of(context).size.width,
-                        )),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          documents[index].data()['Title'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Text(
-                        documents[index].data()['Data'],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ]));
+    Navigator.of(context).pushNamed(NewsDetail.routeName,arguments: Details(documents,index));
   }
 
-  @override
+  @mustCallSuper
   Widget build(BuildContext context) {
+    super.build(context);
     // Firebase.initializeApp();
     return Stack(
       children: [
@@ -112,6 +67,7 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                     (BuildContext context, int itemIndex) =>
                                         Container(
                                   child: CachedNetworkImage(
+                                    cacheKey:documents1[itemIndex].data()['Image'],
                                     imageUrl:
                                         documents1[itemIndex].data()['Image'],
                                     placeholder: (context, url) => Center(
@@ -162,39 +118,41 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                   },
                                 ),
                                 confirmDismiss: (direction) async {
-                                    final bool res = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                "Are you sure you want to delete ?"),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                child: Text(
-                                                  "Cancel",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
+                                  final bool res = await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text(
+                                              "Are you sure you want to delete ?"),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
-                                              FlatButton(
-                                                child: Text(
-                                                  "Delete",
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ),
-                                                onPressed: () {
-                                                  FirebaseFirestore.instance.collection('News').doc(documents[index].id).delete();
-                                                  Navigator.of(context).pop();
-                                                },
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: Text(
+                                                "Delete",
+                                                style: TextStyle(
+                                                    color: Colors.red),
                                               ),
-                                            ],
-                                          );
-                                        });
-                                    return res;
-                                  
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection('News')
+                                                    .doc(documents[index].id)
+                                                    .delete();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                  return res;
                                 },
                               )
                             : GestureDetector(
@@ -247,10 +205,14 @@ class _SingleItemState extends State<SingleItem> {
           subtitle: Text(''),
           trailing: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CachedNetworkImage(
-              imageUrl: widget.url,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+            child: Hero(
+              tag: widget.url,
+                          child: CachedNetworkImage(
+                            cacheKey:widget.url,
+                imageUrl: widget.url,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
           ),
         ),

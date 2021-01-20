@@ -120,39 +120,12 @@ class _TestState extends State<Test> {
                       ListTile(
                         title: Text('Report Bug'),
                         onTap: () async {
-                          String platformResponse;
                           final MailOptions mailOptions = MailOptions(
                             subject: 'Bug Report',
                             recipients: ['hirdeshgarg0012@gmail.com'],
                             isHTML: false,
                           );
-
-                          final MailerResponse response =
                               await FlutterMailer.send(mailOptions);
-                          switch (response) {
-                            case MailerResponse.saved:
-
-                              /// ios only
-                              platformResponse = 'mail was saved to draft';
-                              break;
-                            case MailerResponse.sent:
-
-                              /// ios only
-                              platformResponse = 'mail was sent';
-                              break;
-                            case MailerResponse.cancelled:
-
-                              /// ios only
-                              platformResponse = 'mail was cancelled';
-                              break;
-                            case MailerResponse.android:
-                              platformResponse = 'intent was successful';
-                              break;
-                            default:
-                              platformResponse = 'unknown';
-                              break;
-                          }
-                          print(platformResponse);
                         },
                       ),
                       ListTile(
@@ -163,7 +136,7 @@ class _TestState extends State<Test> {
                                 builder: (BuildContext context) {
                                   return CustomDialogBox(
                                     title: 'Grivety',
-                                    img: 'https://firebasestorage.googleapis.com/v0/b/grivety-flutter.appspot.com/o/finalgrivitylogo.png?alt=media&token=a46ae3b8-25ae-447d-a175-be143df6200e',
+                                    img: '',
                                     text: 'Close',
                                     descriptions: "App developed by Hirdesh Garg 2nd Year Chemical Engineering",
                                     branch: '',
