@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import './custom_dailog.dart';
 
 class People extends StatefulWidget {
+  final String admin;
+  People(this.admin);
   @override
   _PeopleState createState() => _PeopleState();
 }
@@ -85,8 +87,8 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Stack(
-              children: [Column(
+      body: Stack(children: [
+        Column(
           children: [
             PeopleFilter(_run, _remove),
             if (_isVisible)
@@ -108,18 +110,58 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (_, int index) {
                           return ListTile(
+                              trailing: widget.admin == 'Super'
+                                  ? PopupMenuButton(
+                                      itemBuilder: (BuildContext context) {
+                                        return <PopupMenuEntry>[
+                                          PopupMenuItem(
+                                            child: documents[index]
+                                                        .data()['Admin'] ==
+                                                    'Yes'
+                                                ? Text('Remove Admin')
+                                                : Text('Make Admin'),
+                                            value: 1,
+                                          ),
+                                        ];
+                                      },
+                                      onSelected: (value) {
+                                        if (value == 1) {
+                                          dynamic docu = documents[index].id;
+                                          if (documents[index]
+                                                  .data()['Admin'] ==
+                                              'Yes') {
+                                            FirebaseFirestore.instance
+                                                .collection('Users')
+                                                .doc(docu)
+                                                .update({'Admin': 'NO'});
+                                          } else {
+                                            FirebaseFirestore.instance
+                                                .collection('Users')
+                                                .doc(docu)
+                                                .update({'Admin': 'Yes'});
+                                          }
+                                          Fluttertoast.showToast(
+                                              msg: "Please Refresh",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              fontSize: 16.0);
+                                        }
+                                      },
+                                    )
+                                  : SizedBox(width:0,height:0),
                               key: Key(index.toString()),
                               leading: CircleAvatar(
-                                backgroundImage:
-                                    (documents[index].data()['Image'] == 'Male' ||
-                                            documents[index].data()['Image'] ==
-                                                'Female')
-                                        ? documents[index].data()['Image'] ==
-                                                'Male'
-                                            ? AssetImage("assests/male.jpg")
-                                            : AssetImage("assests/female.jpg")
-                                        : NetworkImage(
-                                            documents[index].data()['Image']),
+                                backgroundImage: (documents[index]
+                                                .data()['Image'] ==
+                                            'Male' ||
+                                        documents[index].data()['Image'] ==
+                                            'Female')
+                                    ? documents[index].data()['Image'] == 'Male'
+                                        ? AssetImage("assests/male.jpg")
+                                        : AssetImage("assests/female.jpg")
+                                    : NetworkImage(
+                                        documents[index].data()['Image']),
                               ),
                               title: Text(documents[index].data()['Name']),
                               onTap: () {
@@ -136,7 +178,8 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                                             ? "No Description"
                                             : documents[index]
                                                 .data()['Description'],
-                                        branch: documents[index].data()['Branch'],
+                                        branch:
+                                            documents[index].data()['Branch'],
                                       );
                                     });
                               });
@@ -147,11 +190,9 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                   })
           ],
         ),
-        if(!_isVisible)Align(alignment:Alignment.center,child:Text("Select Filters..."))
-        ]
-
-      ),
-
+        if (!_isVisible)
+          Align(alignment: Alignment.center, child: Text("Select Filters..."))
+      ]),
     );
   }
 }

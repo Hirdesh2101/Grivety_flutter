@@ -49,7 +49,7 @@ class ListTileCommunity extends StatelessWidget {
                     child: Text('Report'),
                     value: 1,
                   ),
-                  if (admin == 'Yes')
+                  if (admin == 'Yes' || admin == 'Super')
                     PopupMenuItem(
                       child: Text('Delete'),
                       value: 2,

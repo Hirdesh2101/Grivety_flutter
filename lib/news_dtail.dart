@@ -16,7 +16,7 @@ class NewsDetail extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 15,
+                      height: 5,
                     ),
                     Hero(tag: args.documents[args.index].data()['Image'],
                                           child: Align(

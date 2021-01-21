@@ -172,7 +172,7 @@ class _TestState extends State<Test> {
                 children: [
                   News(doc['Admin']),
                   Community(doc['Admin']),
-                  People(),
+                  People(doc['Admin']),
                   Center(child: Text('Coming Soon...'))
                 ],
               );

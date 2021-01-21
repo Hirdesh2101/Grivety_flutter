@@ -78,7 +78,7 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                 ),
                               );
                             })
-                        : widget.admin == 'Yes'
+                        : widget.admin == 'Yes' || widget.admin == 'Super'
                             ? Dismissible(
                                 background: Container(
                                   color: Colors.red,
@@ -168,7 +168,7 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                 );
               }),
         ),
-        if (widget.admin == 'Yes')
+        if (widget.admin == 'Yes' || widget.admin == 'Super')
           Align(
               alignment: Alignment.bottomRight,
               child: Padding(

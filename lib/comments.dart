@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grivety/quest_pass.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:readmore/readmore.dart';
 
 class Comments extends StatefulWidget {
   static const routeName = '/comments';
@@ -25,7 +26,7 @@ class _CommentsState extends State<Comments> {
     final QuesPass args = ModalRoute.of(context).settings.arguments;
     print(args.ques);
     _addcomment() async {
-      if (_textEditingController.text != '') {
+      if (_textEditingController.text.trim() != '') {
         setState(() {
           _isUploading = true;
         });
@@ -39,7 +40,7 @@ class _CommentsState extends State<Comments> {
         });
         final user = FirebaseAuth.instance.currentUser;
         var obj = [
-          {'Com': _textEditingController.text, 'uid': user.uid}
+          {'Com': _textEditingController.text.trim(), 'uid': user.uid}
         ];
         await FirebaseFirestore.instance
             .collection('Community')
@@ -95,6 +96,7 @@ class _CommentsState extends State<Comments> {
                       return Center(child: Text("No Comments Yet...."));
                     }
                     return ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemBuilder: (_, int index) {
                         return Column(
                           children: [
@@ -133,7 +135,11 @@ class _CommentsState extends State<Comments> {
                                   18.0, 0.0, 8.0, 8.0),
                               child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(list[index]['Com'])),
+                                  child: ReadMoreText(
+                                    list[index]['Com'],
+                                    trimLines: 3,
+                                    trimMode: TrimMode.Line,
+                                  )),
                             ),
                             Divider()
                           ],

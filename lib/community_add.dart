@@ -21,7 +21,7 @@ class _CommunityaddState extends State<Communityadd> {
   @override
   Widget build(BuildContext context) {
     _addQues() async {
-      if (_textEditingController.text != '') {
+      if (_textEditingController.text.trim() != '') {
         setState(() {
           _isUploading = true;
         });
@@ -31,14 +31,14 @@ class _CommunityaddState extends State<Communityadd> {
             .doc(DateTime.now().toString())
             .set({
           'uid': user.uid,
-          'Question': _textEditingController.text,
+          'Question': _textEditingController.text.trim(),
           'Comments': [],
           'Image': '',
           'Video': '',
-          'Likes': '0',
+          'Likes': [],
           'TimeStamp': DateTime.now().toString(),
         });
-        _textEditingController.text = '';
+        _textEditingController.clear();
         setState(() {
           _isUploading = false;
         });
@@ -69,78 +69,91 @@ class _CommunityaddState extends State<Communityadd> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          child: Stack(
-                      children: [Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      color: Colors.blueAccent,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(child: Text("Keep these points in mind :")),
-                            SizedBox(height: 5),
-                            Text("* ASK ONLY RELAVENT QUESTIONS"),
-                            Text('* POST WILL BE REMOVED IF FOUND IRRELEVANT'),
-                            Text(
-                                "* CURRENTLY ONLY ADMINS CAN POST IMAGES OR VIDEO IN THIS SECTION"),
-                          ],
-                        ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    color: Colors.blueAccent,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                              child: Text("Keep these points in mind :")),
+                          SizedBox(height: 5),
+                          Text("* ASK ONLY RELAVENT QUESTIONS"),
+                          Text(
+                              '* POST WILL BE REMOVED IF FOUND IRRELEVANT'),
+                          Text(
+                              "* CURRENTLY ONLY ADMINS CAN POST VIDEO IN THIS SECTION"),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    enabled: _isUploading ? false : true,
-                    decoration: InputDecoration(
-                        hintText: "Enter your Question",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)))),
-                    controller: _textEditingController,
-                    maxLines: null,
-                    minLines: null,
-                    autocorrect: false,
-                    textCapitalization: TextCapitalization.sentences,
-                    //expands:true,
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  enabled: _isUploading ? false : true,
+                  decoration: InputDecoration(
+                      hintText: "Enter your Question",
+                      border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10)))),
+                  controller: _textEditingController,
+                  maxLines: null,
+                  minLines: null,
+                  autocorrect: false,
+                  textCapitalization: TextCapitalization.sentences,
+                  //expands:true,
                 ),
-                //Expanded(child: SizedBox()),
-                Align(
+              ),
+              //Expanded(child: SizedBox()),
+              Align(
                   alignment: Alignment.bottomCenter,
-                  child: Column(
-                  children: [
+                  child: Column(children: [
                     Divider(thickness: 5),
-                
-                _isUploading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: RaisedButton(
-                              disabledColor: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              onPressed: _isUploading ? null : _addQues,
-                              child: Text('ADD'),
-                            ),
+                    _isUploading
+                        ? Center(
+                            child: CircularProgressIndicator(),
                           )
-                        ],
-                      )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.insert_link),
+                            Text('Add Image'),
+                          ],
+                        ),
+                      ),
+                    ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  disabledColor: Colors.grey,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                  onPressed: _isUploading ? null : _addQues,
+                                  child: Text('ADD'),
+                                ),
+                              )
+                            ],
+                          ),
+                    
                   ])),
-              ],
-            ),],
+            ],
           ),
         ),
       ),

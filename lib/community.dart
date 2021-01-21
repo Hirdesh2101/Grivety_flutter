@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/image_community.dart';
 import 'package:grivety/like_com.dart';
+import 'package:readmore/readmore.dart';
 import './video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './list_tile_com.dart';
@@ -48,16 +49,18 @@ class _CommunityState extends State<Community>
                             alignment: Alignment.topLeft,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
+                              child: ReadMoreText(
                                 documents[index].data()['Question'],
                                 textAlign: TextAlign.left,
+                                trimMode: TrimMode.Line,
+                                trimLines: 5,
                               ),
                             )),
                         if (documents[index].data()['Image'] != '')
                           ImageCom(documents, index),
                         if (documents[index].data()['Video'] != '')
                           VideoPlayercustom(index,documents),
-                        LikeCom(documents, index),
+                        LikeCom(documents, index,documents[index].data()['Question']),
                         Divider(
                           thickness: 2,
                         )
