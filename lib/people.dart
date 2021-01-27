@@ -3,6 +3,7 @@ import './peoplefilter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './custom_dailog.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 
 class People extends StatefulWidget {
   final String admin;
@@ -101,7 +102,9 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                   builder: (_, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: ProfileShimmer(
+          padding: EdgeInsets.all(2.0),
+        ),
                       );
                     }
                     final documents = snapshot.data.documents;
@@ -134,7 +137,9 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                                                 .collection('Users')
                                                 .doc(docu)
                                                 .update({'Admin': 'NO'});
-                                          } else {
+                                          } else if(documents[index]
+                                                  .data()['Admin'] ==
+                                              'NO') {
                                             FirebaseFirestore.instance
                                                 .collection('Users')
                                                 .doc(docu)

@@ -1,3 +1,5 @@
+import 'package:grivety/clubs.dart';
+
 import './edit_profile.dart';
 import './custom_dailog.dart';
 import 'package:flutter/material.dart';
@@ -45,29 +47,19 @@ class _TestState extends State<Test> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                    width: 90,
-                                    height: 90,
-                                    decoration: new BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: new DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: (snapshot.data
-                                                          .data()['Image'] ==
-                                                      'Male' ||
-                                                  snapshot.data
-                                                          .data()['Image'] ==
-                                                      'Female')
-                                              ? snapshot.data.data()['Image'] ==
-                                                      'Male'
-                                                  ? AssetImage(
-                                                      "assests/male.jpg")
-                                                  : AssetImage(
-                                                      "assests/female.jpg")
-                                              : NetworkImage(
-                                                  snapshot.data.data()['Image'],
-                                                ),
-                                        ))),
+                                CircleAvatar(
+                                  radius: 45,
+                                  backgroundImage: (snapshot.data
+                                                  .data()['Image'] ==
+                                              'Male' ||
+                                          snapshot.data.data()['Image'] ==
+                                              'Female')
+                                      ? snapshot.data.data()['Image'] == 'Male'
+                                          ? AssetImage("assests/male.jpg")
+                                          : AssetImage("assests/female.jpg")
+                                      : NetworkImage(
+                                          snapshot.data.data()['Image']),
+                                ),
                                 SizedBox(height: 10),
                                 Text('Welcome'),
                                 Text(snapshot.data.data()['Name']),
@@ -99,7 +91,8 @@ class _TestState extends State<Test> {
                       ListTile(
                         leading: Icon(Icons.mode_edit),
                         title: Text('Edit Profile'),
-                        onTap: ()=>Navigator.of(context).pushNamed(EditProfile.routeName),
+                        onTap: () => Navigator.of(context)
+                            .pushNamed(EditProfile.routeName),
                       ),
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
@@ -114,7 +107,7 @@ class _TestState extends State<Test> {
                       ListTile(
                         title: Text('Share'),
                         onTap: () => Share.share(
-                            'check out my website https://example.com',
+                            'Check out my app Grivety ....',
                             subject: 'Look what I made!'),
                       ),
                       ListTile(
@@ -125,12 +118,12 @@ class _TestState extends State<Test> {
                             recipients: ['hirdeshgarg0012@gmail.com'],
                             isHTML: false,
                           );
-                              await FlutterMailer.send(mailOptions);
+                          await FlutterMailer.send(mailOptions);
                         },
                       ),
                       ListTile(
-                        title: Text('Contact us'),
-                        onTap: () {
+                          title: Text('Contact us'),
+                          onTap: () {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -138,12 +131,12 @@ class _TestState extends State<Test> {
                                     title: 'Grivety',
                                     img: '',
                                     text: 'Close',
-                                    descriptions: "App developed by Hirdesh Garg 2nd Year Chemical Engineering",
+                                    descriptions:
+                                        "App developed by Hirdesh Garg 2nd Year Chemical Engineering",
                                     branch: '',
                                   );
                                 });
-                          }
-                      ),
+                          }),
                     ],
                   );
                 }),
@@ -153,10 +146,10 @@ class _TestState extends State<Test> {
           bottom: TabBar(
             isScrollable: true,
             tabs: [
-              Tab(text: "News"),
               Tab(text: "Community"),
+              Tab(text: "News"),
               Tab(text: "People"),
-              Tab(text: "Book")
+              Tab(text: "Clubs")
             ],
           ),
         ),
@@ -170,10 +163,10 @@ class _TestState extends State<Test> {
               }
               return TabBarView(
                 children: [
-                  News(doc['Admin']),
                   Community(doc['Admin']),
+                  News(doc['Admin']),
                   People(doc['Admin']),
-                  Center(child: Text('Coming Soon...'))
+                  Clubs(),
                 ],
               );
             }),

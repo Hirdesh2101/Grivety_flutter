@@ -20,7 +20,11 @@ class _AddImageState extends State<AddImage> {
   String url;
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery,imageQuality: 25);
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 25,
+        maxHeight: 400,
+        maxWidth: 400);
 
     setState(() {
       if (pickedFile != null) {
@@ -42,6 +46,20 @@ class _AddImageState extends State<AddImage> {
       setState(() {
         _isUploading = true;
       });
+      /*var temp = await img.length();
+      var result;
+      Directory tempDir = await getTemporaryDirectory();
+      while (temp >= 15000) {
+        result = await FlutterImageCompress.compressAndGetFile(
+          img.absolute.path,
+          tempDir.path,
+          quality: 40,
+        );
+        temp = result.lengthSync();
+        print(img.lengthSync());
+        img = result;
+        print(img.lengthSync());
+      }*/
       await firebase_storage.FirebaseStorage.instance
           .ref('profiles/$user')
           .putFile(img);
@@ -59,11 +77,11 @@ class _AddImageState extends State<AddImage> {
     } on firebase_core.FirebaseException catch (e) {
       print(e);
       Fluttertoast.showToast(
-            msg: "Error.. Please Try again",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: 16.0);
+          msg: "Error.. Please Try again",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
     }
   }
 
@@ -94,15 +112,20 @@ class _AddImageState extends State<AddImage> {
             _image != null
                 ? FlatButton(
                     child: Text('Add'),
-                    onPressed: _isUploading?null:() {
-                      _uploadFile(_image);
-                    },
+                    onPressed: _isUploading
+                        ? null
+                        : () {
+                            _uploadFile(_image);
+                          },
                   )
                 : Container(),
-            _isUploading?Center(child:CircularProgressIndicator()):Container(),    
+            _isUploading
+                ? Center(child: CircularProgressIndicator())
+                : Container(),
             FlatButton(
               child: Text('Skip'),
-              onPressed: _isUploading?null:()=>Navigator.of(context).pop(),
+              onPressed:
+                  _isUploading ? null : () => Navigator.of(context).pop(),
             )
           ],
         ),

@@ -83,12 +83,10 @@ class _CommunityaddState extends State<Communityadd> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
-                              child: Text("Keep these points in mind :")),
+                          Center(child: Text("Keep these points in mind :")),
                           SizedBox(height: 5),
                           Text("* ASK ONLY RELAVENT QUESTIONS"),
-                          Text(
-                              '* POST WILL BE REMOVED IF FOUND IRRELEVANT'),
+                          Text('* POST WILL BE REMOVED IF FOUND IRRELEVANT'),
                           Text(
                               "* CURRENTLY ONLY ADMINS CAN POST VIDEO IN THIS SECTION"),
                         ],
@@ -104,8 +102,7 @@ class _CommunityaddState extends State<Communityadd> {
                   decoration: InputDecoration(
                       hintText: "Enter your Question",
                       border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10)))),
+                          borderRadius: BorderRadius.all(Radius.circular(10)))),
                   controller: _textEditingController,
                   maxLines: null,
                   minLines: null,
@@ -126,18 +123,36 @@ class _CommunityaddState extends State<Communityadd> {
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.insert_link),
-                            Text('Add Image'),
-                          ],
-                        ),
-                      ),
-                    ),
+                              InkWell(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Icon(Icons.insert_link),
+                                      Text('Add Image'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Icon(Icons.insert_link),
+                                      Text('Add Video'),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: RaisedButton(
@@ -151,7 +166,6 @@ class _CommunityaddState extends State<Communityadd> {
                               )
                             ],
                           ),
-                    
                   ])),
             ],
           ),

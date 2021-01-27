@@ -11,13 +11,23 @@ class NewsDetail extends StatelessWidget {
       body: SingleChildScrollView(
           //dragStartBehavior: DragStartBehavior.down,
               child: Container(
-                margin: MediaQuery.of(context).padding,
+                //margin: MediaQuery.of(context).padding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 5,
+              
+                     Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          args.documents[args.index].data()['Title'],
+                          style: TextStyle(fontWeight: FontWeight.bold,fontSize:18),
+                          
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
                     ),
+                    SizedBox(height:5),
                     Hero(tag: args.documents[args.index].data()['Image'],
                                           child: Align(
                           alignment: Alignment.center,
@@ -30,21 +40,12 @@ class NewsDetail extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                           )),
                     ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          args.documents[args.index].data()['Title'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                    ),
+                   
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
                         args.documents[args.index].data()['Data'],
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(),
                         textAlign: TextAlign.start,
                       ),
                     ),

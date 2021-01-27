@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:better_player/better_player.dart';
+import 'package:shimmer/shimmer.dart';
 
 class VideoPlayercustom extends StatefulWidget {
-  VideoPlayercustom(this.index,this.documents);
+  VideoPlayercustom(this.index, this.documents);
   final int index;
   final dynamic documents;
 
@@ -34,8 +35,25 @@ class _VideoPlayercustomState extends State<VideoPlayercustom> {
             enableQualities: true,
             enableSkips: false,
             playerTheme: BetterPlayerTheme.material,
+            loadingWidget: Shimmer.fromColors(
+              enabled: true,
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100],
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: double.infinity,
+                color: Colors.white60,
+              )),
           ),
-          placeholder: Center(child: CircularProgressIndicator()),
+          placeholder: Shimmer.fromColors(
+              enabled: true,
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100],
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: double.infinity,
+                color: Colors.white60,
+              )),
           showPlaceholderUntilPlay: true,
           //aspectRatio: 16 / 9,
           autoDispose: true,

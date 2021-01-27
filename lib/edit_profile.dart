@@ -26,8 +26,11 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future getImage() async {
-    final pickedFile =
-        await _picker.getImage(source: ImageSource.gallery, imageQuality: 25);
+    final pickedFile = await _picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 25,
+        maxHeight: 400,
+        maxWidth: 400);
 
     setState(() {
       if (pickedFile != null) {
@@ -50,6 +53,22 @@ class _EditProfileState extends State<EditProfile> {
         _isUploading = true;
       });
       if (img != null) {
+        //   var temp = await img.length();
+        //var result;
+        /*print(temp);
+      Directory tempDir = await getTemporaryDirectory();
+      while (temp >= 15000) {
+        result = await FlutterImageCompress.compressAndGetFile(
+          img.absolute.path,
+          tempDir.path,
+          quality: 40,
+          format: CompressFormat.jpeg
+        );
+        temp = result.lengthSync();
+        print(img.lengthSync());
+        img = result;
+        print(img.lengthSync());
+      }*/
         await firebase_storage.FirebaseStorage.instance
             .ref('profiles/$user')
             .putFile(img);
@@ -145,8 +164,14 @@ class _EditProfileState extends State<EditProfile> {
                           ? (snapshot.data.data()['Image'] == 'Male' ||
                                   snapshot.data.data()['Image'] == 'Female')
                               ? snapshot.data.data()['Image'] == 'Male'
-                                  ? CircleAvatar(radius:85,backgroundImage: AssetImage("assests/male.jpg"))
-                                  : CircleAvatar(radius:85,backgroundImage:AssetImage("assests/female.jpg"))
+                                  ? CircleAvatar(
+                                      radius: 85,
+                                      backgroundImage:
+                                          AssetImage("assests/male.jpg"))
+                                  : CircleAvatar(
+                                      radius: 85,
+                                      backgroundImage:
+                                          AssetImage("assests/female.jpg"))
                               : CircleAvatar(
                                   radius: 85,
                                   backgroundImage: NetworkImage(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import './register.dart';
 
 class AuthFormLogin extends StatefulWidget {
@@ -24,6 +26,12 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
   var _userEmail = '';
   var _userName = '';
   var _userPassword = '';
+  TextEditingController _textEditingController = TextEditingController();
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();
@@ -92,18 +100,69 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                     ),
                     SizedBox(height: 5),
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
                         GestureDetector(
-                          child:Text('Forgot Password ?',style: TextStyle(fontSize:12),),
-                          onTap:(){}
-                        )
-                      ],),
+                            child: Text(
+                              'Forgot Password ?',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      child: Column(
+                                        children: [
+                                          Text('Enter Your Email'),
+                                          TextField(
+                                            controller: _textEditingController,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                            autocorrect: false,
+                                          ),
+                                          Row(
+                                            children: [
+                                              FlatButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                  child: Text('Cancel')),
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    final _auth =
+                                                        FirebaseAuth.instance;
+                                                    _auth.sendPasswordResetEmail(
+                                                        email:
+                                                            _textEditingController
+                                                                .text
+                                                                .trim());
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Email Send Succesfully",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        fontSize: 16.0);
+                                                        Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Send Email')),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            })
+                      ],
+                    ),
                     SizedBox(height: 10),
                     if (widget.isLoading) CircularProgressIndicator(),
                     if (!widget.isLoading)
                       Container(
-                        width: MediaQuery.of(context).size.width*0.55,
+                        width: MediaQuery.of(context).size.width * 0.55,
                         child: RaisedButton(
                           color: Color.fromARGB(255, 0, 171, 227),
                           shape: RoundedRectangleBorder(
@@ -117,12 +176,15 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                           onPressed: _trySubmit,
                         ),
                       ),
-                      SizedBox(height:5),
+                    SizedBox(height: 5),
                     Center(
                       child: GestureDetector(
                           onTap: () => Navigator.of(context)
                               .pushNamed(Register.routeName),
-                          child: Text('New User? Register Here',style: TextStyle(fontSize:12),)),
+                          child: Text(
+                            'New User? Register Here',
+                            style: TextStyle(fontSize: 12),
+                          )),
                     )
                   ],
                 ),

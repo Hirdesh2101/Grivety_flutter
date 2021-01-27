@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:grivety/addnews.dart';
 import 'package:grivety/news_dtail.dart';
 import './quest_pass.dart';
+import 'package:shimmer/shimmer.dart';
 
 class News extends StatefulWidget {
   final String admin;
@@ -18,7 +19,8 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   void _sheet(dynamic documents, int index) {
-    Navigator.of(context).pushNamed(NewsDetail.routeName,arguments: Details(documents,index));
+    Navigator.of(context)
+        .pushNamed(NewsDetail.routeName, arguments: Details(documents, index));
   }
 
   @mustCallSuper
@@ -65,15 +67,98 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                 itemCount: documents1.length,
                                 itemBuilder:
                                     (BuildContext context, int itemIndex) =>
-                                        Container(
-                                  child: CachedNetworkImage(
-                                    cacheKey:documents1[itemIndex].data()['Image'],
-                                    imageUrl:
-                                        documents1[itemIndex].data()['Image'],
-                                    placeholder: (context, url) => Center(
-                                        child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
+                                        Card(
+                                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: CachedNetworkImage(
+                                          cacheKey: documents1[itemIndex]
+                                              .data()['Image'],
+                                          imageUrl: documents1[itemIndex]
+                                              .data()['Image'],
+                                          placeholder: (context, url) => Center(
+                                              child:
+                                                 Shimmer.fromColors(
+              enabled: true,
+              baseColor: Colors.grey[500],
+              highlightColor: Colors.grey[100],
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: double.infinity,
+                color: Colors.white60,
+              ))),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                        ),
+                                      ),
+                                      if (widget.admin == 'Yes' ||
+                                          widget.admin == 'Super')
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: PopupMenuButton(
+                                            itemBuilder:
+                                                (BuildContext context) {
+                                              return <PopupMenuEntry>[
+                                                PopupMenuItem(
+                                                  child: Text('Delete'),
+                                                  value: 1,
+                                                ),
+                                              ];
+                                            },
+                                            onSelected: (value) {
+                                              if (value == 1) {
+                                                dynamic docu1 =
+                                                    documents1[itemIndex].id;
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) {
+                                                      return AlertDialog(
+                                                        content: Text(
+                                                            "Are you sure you want to delete ?"),
+                                                        actions: <Widget>[
+                                                          FlatButton(
+                                                            child: Text(
+                                                              "Cancel",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                          FlatButton(
+                                                            child: Text(
+                                                              "Delete",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                            onPressed: () {
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'Slider')
+                                                                  .doc(docu1)
+                                                                  .delete();
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              }
+                                            },
+                                          ),
+                                        )
+                                    ],
                                   ),
                                 ),
                               );
@@ -207,8 +292,8 @@ class _SingleItemState extends State<SingleItem> {
             padding: const EdgeInsets.all(8.0),
             child: Hero(
               tag: widget.url,
-                          child: CachedNetworkImage(
-                            cacheKey:widget.url,
+              child: CachedNetworkImage(
+                cacheKey: widget.url,
                 imageUrl: widget.url,
                 placeholder: (context, url) => CircularProgressIndicator(),
                 errorWidget: (context, url, error) => Icon(Icons.error),
