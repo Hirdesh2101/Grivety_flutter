@@ -112,46 +112,55 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return Dialog(
-                                      child: Column(
-                                        children: [
-                                          Text('Enter Your Email'),
-                                          TextField(
-                                            controller: _textEditingController,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            autocorrect: false,
-                                          ),
-                                          Row(
-                                            children: [
-                                              FlatButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                  child: Text('Cancel')),
-                                              FlatButton(
-                                                  onPressed: () {
-                                                    final _auth =
-                                                        FirebaseAuth.instance;
-                                                    _auth.sendPasswordResetEmail(
-                                                        email:
-                                                            _textEditingController
-                                                                .text
-                                                                .trim());
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "Email Send Succesfully",
-                                                        toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                        gravity:
-                                                            ToastGravity.BOTTOM,
-                                                        timeInSecForIosWeb: 1,
-                                                        fontSize: 16.0);
-                                                        Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Send Email')),
-                                            ],
-                                          )
-                                        ],
+                                      child: Wrap(
+                                        children: [Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text('Enter Your Email',style: TextStyle(fontSize: 20),),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: TextField(
+                                                controller: _textEditingController,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                autocorrect: false,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                FlatButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(),
+                                                    child: Text('Cancel')),
+                                                FlatButton(
+                                                    onPressed: () {
+                                                      final _auth =
+                                                          FirebaseAuth.instance;
+                                                      _auth.sendPasswordResetEmail(
+                                                          email:
+                                                              _textEditingController
+                                                                  .text
+                                                                  .trim());
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Email Send Succesfully",
+                                                          toastLength:
+                                                              Toast.LENGTH_SHORT,
+                                                          gravity:
+                                                              ToastGravity.BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          fontSize: 16.0);
+                                                          Navigator.of(context).pop();
+                                                    },
+                                                    child: Text('Send Email',style: TextStyle(color: Colors.blue),)),
+                                              ],
+                                            )
+                                          ],
+                                        ),]
                                       ),
                                     );
                                   });

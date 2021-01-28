@@ -122,7 +122,7 @@ class _TestState extends State<Test> {
                         },
                       ),
                       ListTile(
-                          title: Text('Contact us'),
+                          title: Text('About us'),
                           onTap: () {
                             showDialog(
                                 context: context,
