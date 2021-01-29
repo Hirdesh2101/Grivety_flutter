@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
                           }
                           return Loginscreen();
                         }),
-                    image: new Image.asset('assests/finalgrivitylogo.png'),
+                    image: new Image.asset('assests/logo1.png'),
                     backgroundColor: Colors.black26,
                     styleTextUnderTheLoader: new TextStyle(),
                     photoSize: 100.0,

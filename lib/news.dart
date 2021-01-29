@@ -39,7 +39,7 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                     child: CircularProgressIndicator(),
                   );
                 }
-                final documents = snapshot.data.documents;
+                final documents = snapshot.data.docs;
                 //print(documents.length);
                 return new ListView.builder(
                   itemBuilder: (_, int index) {
@@ -55,7 +55,7 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                   child: CircularProgressIndicator(),
                                 );
                               }
-                              final documents1 = snapshot.data.documents;
+                              final documents1 = snapshot.data.docs;
                               return CarouselSlider.builder(
                                 options: CarouselOptions(
                                   pageViewKey: PageStorageKey('xn'),

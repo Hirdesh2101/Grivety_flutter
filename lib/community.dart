@@ -36,7 +36,7 @@ class _CommunityState extends State<Community>
                     child: CircularProgressIndicator(),
                   );
                 }
-                final documents = snapshot.data.documents;
+                final documents = snapshot.data.docs;
                 return ListView.builder(
                   cacheExtent: 1500,
                   physics: BouncingScrollPhysics(),

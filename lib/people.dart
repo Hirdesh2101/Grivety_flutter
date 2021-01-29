@@ -107,14 +107,16 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
         ),
                       );
                     }
-                    final documents = snapshot.data.documents;
+                    final documents = snapshot.data.docs;
                     return Expanded(
                       child: ListView.builder(
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (_, int index) {
                           return ListTile(
                               trailing: widget.admin == 'Super'
-                                  ? PopupMenuButton(
+                                  ? documents[index]
+                                                        .data()['Admin'] ==
+                                                    'Super'?SizedBox(width:0,height:0):PopupMenuButton(
                                       itemBuilder: (BuildContext context) {
                                         return <PopupMenuEntry>[
                                           PopupMenuItem(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'package:scroll_snap_list/scroll_snap_list.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Clubs extends StatefulWidget {
   @override
@@ -10,27 +11,111 @@ class _ClubsState extends State<Clubs> {
   int _index = 0;
   List<Map<String, String>> clubsfilter = [];
   List<Map<String, String>> clubs = [
-    {'name': 'CACS', 'type': 'Welfare'},
-    {'name': 'SMP', 'type': 'Welfare'},
-    {'name': 'CODESHOWS', 'type': 'Technical'},
-    {'name': 'TECHNICAL SOCIETY', 'type': 'Technical'},
-    {'name': 'ZINE', 'type': 'Technical'},
-    {'name': 'EDCELL', 'type': 'Personal Development'},
-    {'name': 'SAE', 'type': 'Personal Development'},
-    {'name': 'MDS', 'type': 'Cultural'},
-    {'name': 'MC2', 'type': 'Cultural'},
-    {'name': 'DIL', 'type': 'Cultural'},
-    {'name': 'FILM AND PHOTOGRAPHY', 'type': 'Cultural'},
-    {'name': 'LEVEL X', 'type': 'Cultural'},
-    {'name': 'ALCOM', 'type': 'Welfare'},
-    {'name': 'NSS', 'type': 'Welfare'},
-    {'name': 'UBA', 'type': 'Welfare'},
-    {'name': 'VSS', 'type': 'Welfare'},
-    {'name': 'HOPE', 'type': 'Welfare'},
-    {'name': 'ENERGY CLUB', 'type': 'Welfare'},
-    {'name': 'ROTRACT', 'type': 'Welfare'},
-    {'name': 'THINK INDIA', 'type': 'Welfare'},
-    {'name': 'MAVERICS', 'type': 'Personal Development'},
+    {
+      'name': 'CACS',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/cacs_mnit?igshid=1jqj65rjc8o1y'
+    },
+    {
+      'name': 'SMP',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/smp.mnit?igshid=1hlen53c0r42r'
+    },
+    {
+      'name': 'CODESHOWS',
+      'type': 'Technical',
+      'link': 'https://instagram.com/cacs_mnit?igshid=1jqj65rjc8o1y'
+    },
+    {
+      'name': 'TECHNICAL SOCIETY',
+      'type': 'Technical',
+      'link': 'https://instagram.com/cacs_mnit?igshid=1jqj65rjc8o1y'
+    },
+    {
+      'name': 'ZINE',
+      'type': 'Technical',
+      'link': 'https://instagram.com/zine.robotics?igshid=18fib1kz0vvkd'
+    },
+    {
+      'name': 'EDCELL',
+      'type': 'Personal Development',
+      'link': 'https://instagram.com/edcmnitj?igshid=15lob4ql9jitm'
+    },
+    {
+      'name': 'SAE',
+      'type': 'Personal Development',
+      'link': 'https://instagram.com/sae_mnit_jaipur?igshid=1jdkci311owof'
+    },
+    {
+      'name': 'MDS',
+      'type': 'Cultural',
+      'link': 'https://instagram.com/mdsmnitjaipur?igshid=1fvomzby7ymei'
+    },
+    {
+      'name': 'MC2',
+      'type': 'Cultural',
+      'link': 'https://instagram.com/mc2_officialpage?igshid=1272kdu899jd8'
+    },
+    {
+      'name': 'DIL',
+      'type': 'Cultural',
+      'link': 'https://instagram.com/dil.dramsoc?igshid=ytefldo3k5rq'
+    },
+    {
+      'name': 'FILM AND PHOTOGRAPHY',
+      'type': 'Cultural',
+      'link': 'https://instagram.com/fandp_club?igshid=zxv1rkjnu7sq'
+    },
+    {
+      'name': 'LEVEL X',
+      'type': 'Cultural',
+      'link': 'https://instagram.com/l.e.v.e.l_x?igshid=15brjioe83wq0'
+    },
+    {
+      'name': 'ALCOM',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/alcom_mnit?igshid=1abhc6jfpumph'
+    },
+    {
+      'name': 'NSS',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/nssmnit?igshid=1az25jhr0wpfe'
+    },
+    {
+      'name': 'UBA',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/ubamnit?igshid=17ajxffo6ndaa'
+    },
+    {
+      'name': 'VSS',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/vssmnit?igshid=6qz6ljwaaaos'
+    },
+    {
+      'name': 'HOPE',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/hope.everywhere?igshid=11ygw33m5mw1p'
+    },
+    {
+      'name': 'ENERGY CLUB',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/the_energy_club?igshid=q9yvdq3hv0um'
+    },
+    {
+      'name': 'ROTRACT',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/mnit_rotaract_club?igshid=covnq4lg2iel'
+    },
+    {
+      'name': 'THINK INDIA',
+      'type': 'Welfare',
+      'link': 'https://instagram.com/thinkindiamnit?igshid=12hp7w6d1depr'
+    },
+    {
+      'name': 'MAVERICS',
+      'type': 'Personal Development',
+      'link': 'https://instagram.com/mavericks.mnit?igshid=479fvivnrr7y'
+    },
   ];
   Widget _buildListItem(
       BuildContext context, int index, List<Map<String, String>> x1) {
@@ -49,10 +134,66 @@ class _ClubsState extends State<Clubs> {
                     context: context,
                     builder: (BuildContext ctx) {
                       return Dialog(
-                          //decoration: BoxDecoration(color: Colors.blue),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           insetAnimationCurve: Curves.easeIn,
                           insetAnimationDuration: Duration(milliseconds: 500),
-                          child: Text('${x1[index]['name']}'));
+                          child: Wrap(children: [
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                   Image.asset('assests/logo1.png',width: 40,height: 50,),
+                                    Column(
+                                      children: [
+                                        Text('Type:'),
+                                        Text('${x1[index]['type']}'),
+                                      ],
+                                    ),
+                                  ],),
+                                  SizedBox(height: 5,),
+                                  Text('${x1[index]['name']}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                                  SizedBox(height: 5,),
+                                  Text('Descrpition'),
+                                  SizedBox(height: 8,),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*0.45,
+                                    child: RaisedButton(
+                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      onPressed: (){},
+                                    child: Text('More Information'),
+                                    color: Colors.black38,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*0.45,
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                        onPressed: () async {
+                                          final url = '${x1[index]['link']}';
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: "Could Not Open Handel",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                // backgroundColor: Colors.red,
+                                                // textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          }
+                                        },
+                                        child: Text('Social Handel'),
+                                        color: Color.fromARGB(255, 54, 59, 63)),
+                                  ),
+                                     
+                                ],
+                              ),
+                            ),
+                          ]));
                     });
               },
               child: Container(
@@ -155,7 +296,7 @@ class _ClubsState extends State<Clubs> {
                   children: [
                     IconButton(
                         iconSize: 24,
-                        splashRadius: 15,
+                        //splashRadius: 15,
                         icon: Icon(Icons.all_inclusive),
                         onPressed: () {
                           setState(() {
@@ -166,7 +307,7 @@ class _ClubsState extends State<Clubs> {
                         }),
                     IconButton(
                         iconSize: 24,
-                        splashRadius: 15,
+                        //splashRadius: 15,
                         icon: Icon(Icons.music_note),
                         onPressed: () {
                           setState(() {

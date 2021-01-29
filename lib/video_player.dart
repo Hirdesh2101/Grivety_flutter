@@ -28,7 +28,7 @@ class _VideoPlayercustomState extends State<VideoPlayercustom> {
         ),
         key: Key(key.toString()),
         configuration: BetterPlayerConfiguration(
-          autoPlay: true,
+          autoPlay: false,
           looping: false,
           controlsConfiguration: BetterPlayerControlsConfiguration(
             enableFullscreen: false,
@@ -54,7 +54,7 @@ class _VideoPlayercustomState extends State<VideoPlayercustom> {
                 height: double.infinity,
                 color: Colors.white60,
               )),
-          showPlaceholderUntilPlay: true,
+          showPlaceholderUntilPlay: false,
           //aspectRatio: 16 / 9,
           autoDispose: true,
         ),

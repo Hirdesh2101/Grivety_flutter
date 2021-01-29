@@ -102,7 +102,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                             ? AssetImage("assests/male.jpg")
                             : AssetImage("assests/female.jpg")
                         : widget.img == ''
-                            ? AssetImage('assests/finalgrivitylogo.png')
+                            ? AssetImage('assests/logo2.png')
                             : NetworkImage(widget.img)),
           ),
         ),

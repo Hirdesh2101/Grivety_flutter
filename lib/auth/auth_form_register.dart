@@ -135,10 +135,10 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+     // backgroundColor: Colors.blue,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.blue,
+        //backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Card(
@@ -352,17 +352,23 @@ class _AuthFormState extends State<AuthForm> {
                     SizedBox(height: 12),
                     if (widget.isLoading) CircularProgressIndicator(),
                     if (!widget.isLoading)
-                      RaisedButton(
-                        color: Color.fromARGB(255, 0, 171, 227),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Text(
-                          'Signup',
-                          style: TextStyle(
-                            color: Colors.white,
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.58,
+                            height: MediaQuery.of(context).size.height*0.07,
+                            decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),gradient: LinearGradient(colors: [Color.fromARGB(255, 52, 63, 95),Color.fromARGB(200, 32, 29, 48)])),
+                        child: RaisedButton(
+                          color: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            'SIGNUP',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
+                          onPressed: _trySubmit,
                         ),
-                        onPressed: _trySubmit,
                       ),
                   ],
                 ),
