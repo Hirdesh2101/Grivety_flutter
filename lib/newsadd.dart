@@ -74,6 +74,7 @@ class _NewsAddState extends State<NewsAdd> {
 
       setState(() {
         _isUploading = false;
+        _image = null;
       });
     } on firebase_core.FirebaseException catch (e) {
       print(e);

@@ -22,7 +22,7 @@ class _AddImageState extends State<AddImage> {
   Future getImage() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery,
-        imageQuality: 25,
+        imageQuality: 50,
         maxHeight: 400,
         maxWidth: 400);
 

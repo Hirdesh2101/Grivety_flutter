@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class Communityadd extends StatefulWidget {
   static const routeName = '/community_add';
@@ -10,12 +13,57 @@ class Communityadd extends StatefulWidget {
 }
 
 class _CommunityaddState extends State<Communityadd> {
+  File _image;
+  File _video;
+  final _picker = ImagePicker();
+  //bool _isUploading = false;
+  String url;
   TextEditingController _textEditingController = TextEditingController();
   bool _isUploading = false;
   @override
   void dispose() {
     _textEditingController.dispose();
     super.dispose();
+  }
+
+  Future _addImg() async {
+    final pickedFile = await _picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 90,
+        maxHeight: 600,
+        maxWidth: 600);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        Fluttertoast.showToast(
+            msg: "No Image Selected",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      }
+    });
+  }
+
+  Future _addVid() async {
+    final pickedFile = await _picker.getVideo(
+      source: ImageSource.gallery,
+    );
+
+    setState(() {
+      if (pickedFile != null) {
+        _video = File(pickedFile.path);
+      } else {
+        Fluttertoast.showToast(
+            msg: "No Video Selected",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      }
+    });
   }
 
   @override
@@ -25,6 +73,34 @@ class _CommunityaddState extends State<Communityadd> {
         setState(() {
           _isUploading = true;
         });
+        if(_image!=null && _video!=null){
+          Fluttertoast.showToast(
+            msg: "Add either An Image or A Video",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+        }else if(_image!=null){
+          Key s = UniqueKey();
+      String temp = s.toString();
+      await firebase_storage.FirebaseStorage.instance
+          .ref('community/$temp')
+          .putFile(_image);
+      String downloadURL = await firebase_storage.FirebaseStorage.instance
+          .ref('community/$temp')
+          .getDownloadURL();
+      url = downloadURL;
+        }else if (_video!=null){
+          Key s = UniqueKey();
+      String temp = s.toString();
+      await firebase_storage.FirebaseStorage.instance
+          .ref('community/$temp')
+          .putFile(_video);
+      String downloadURL = await firebase_storage.FirebaseStorage.instance
+          .ref('community/$temp')
+          .getDownloadURL();
+      url = downloadURL;
+        }
         final user = FirebaseAuth.instance.currentUser;
         await FirebaseFirestore.instance
             .collection('Community')
@@ -33,14 +109,16 @@ class _CommunityaddState extends State<Communityadd> {
           'uid': user.uid,
           'Question': _textEditingController.text.trim(),
           'Comments': [],
-          'Image': '',
-          'Video': '',
+          'Image': _image!=null?url:'',
+          'Video': _video!=null?url:'',
           'Likes': [],
           'TimeStamp': DateTime.now().toString(),
         });
         _textEditingController.clear();
         setState(() {
           _isUploading = false;
+          _image = null;
+          _video = null;
         });
         Navigator.of(context).pop();
       } else {
@@ -123,35 +201,123 @@ class _CommunityaddState extends State<Communityadd> {
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 5,
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: _addImg,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(Icons.insert_link),
+                                          _image != null
+                                              ? Text('Change Image')
+                                              : Text('Add Image'),
+                                        ],
                                       ),
-                                      Icon(Icons.insert_link),
-                                      Text('Add Image'),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  _image != null
+                                      ? Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.38,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Row(children: [
+                                            Icon(
+                                              Icons.image,
+                                              color: Colors.red,
+                                            ),
+                                            SizedBox(width: 2),
+                                            Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.13,
+                                                child: Text(
+                                                  '${_image.path.split('/').last}',
+                                                  maxLines: 1,
+                                                )),
+                                                IconButton(
+                                                  iconSize: 15,
+                                                icon: Icon(
+                                                    Icons.cancel_outlined),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _image = null;
+                                                  });
+                                                }),
+                                          ]),
+                                        )
+                                      : SizedBox(height: 0, width: 0),
+                                ],
                               ),
-                              InkWell(
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 5,
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: _addVid,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(Icons.insert_link),
+                                          _video != null
+                                              ? Text('Change Video')
+                                              : Text('Add Video'),
+                                        ],
                                       ),
-                                      Icon(Icons.insert_link),
-                                      Text('Add Video'),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  _video != null
+                                      ? Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.38,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Row(children: [
+                                            Icon(
+                                              Icons.video_library,
+                                              color: Colors.red,
+                                            ),
+                                            SizedBox(width: 2),
+                                            Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.13,
+                                                child: Text(
+                                                  '${_video.path.split('/').last}',
+                                                  maxLines: 1,
+                                                )),
+                                                IconButton(
+                                                  iconSize: 15,
+                                                icon: Icon(
+                                                    Icons.cancel_outlined),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _video = null;
+                                                  });
+                                                }),
+                                          ]),
+                                        )
+                                      : SizedBox(height: 0, width: 0),
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),

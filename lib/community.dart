@@ -38,7 +38,8 @@ class _CommunityState extends State<Community>
                 }
                 final documents = snapshot.data.docs;
                 return ListView.builder(
-                  cacheExtent: 1500,
+                  cacheExtent: 5,
+                  addAutomaticKeepAlives: true,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     return Column(

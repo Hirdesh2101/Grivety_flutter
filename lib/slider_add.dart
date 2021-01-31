@@ -65,6 +65,7 @@ class _SliderAddState extends State<SliderAdd> {
           fontSize: 16.0);
       setState(() {
         _isUploading = false;
+        _image = null;
       });
     } on firebase_core.FirebaseException catch (e) {
       print(e);

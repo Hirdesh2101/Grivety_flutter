@@ -28,7 +28,7 @@ class _EditProfileState extends State<EditProfile> {
   Future getImage() async {
     final pickedFile = await _picker.getImage(
         source: ImageSource.gallery,
-        imageQuality: 25,
+        imageQuality: 50,
         maxHeight: 400,
         maxWidth: 400);
 
