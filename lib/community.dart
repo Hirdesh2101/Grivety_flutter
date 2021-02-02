@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/image_community.dart';
 import 'package:grivety/like_com.dart';
+import 'package:grivety/quest_pass.dart';
 import 'package:readmore/readmore.dart';
 import './video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,7 +39,7 @@ class _CommunityState extends State<Community>
                 }
                 final documents = snapshot.data.docs;
                 return ListView.builder(
-                  cacheExtent: 5,
+                  cacheExtent: 10,
                   addAutomaticKeepAlives: true,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
@@ -82,6 +83,7 @@ class _CommunityState extends State<Community>
                   onPressed: () {
                     Navigator.of(context).pushNamed(
                       Communityadd.routeName,
+                      arguments: IsAdmin(widget.admin),
                     );
                   }),
             )),

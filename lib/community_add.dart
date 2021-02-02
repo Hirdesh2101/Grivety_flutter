@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:grivety/quest_pass.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -68,6 +69,7 @@ class _CommunityaddState extends State<Communityadd> {
 
   @override
   Widget build(BuildContext context) {
+    final IsAdmin args = ModalRoute.of(context).settings.arguments;
     _addQues() async {
       if (_textEditingController.text.trim() != '') {
         setState(() {
@@ -80,7 +82,7 @@ class _CommunityaddState extends State<Communityadd> {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             fontSize: 16.0);
-        }else if(_image!=null){
+        }else if(_image!=null && _video==null){
           Key s = UniqueKey();
       String temp = s.toString();
       await firebase_storage.FirebaseStorage.instance
@@ -90,7 +92,7 @@ class _CommunityaddState extends State<Communityadd> {
           .ref('community/$temp')
           .getDownloadURL();
       url = downloadURL;
-        }else if (_video!=null){
+        }else if (_video!=null && _image ==null){
           Key s = UniqueKey();
       String temp = s.toString();
       await firebase_storage.FirebaseStorage.instance
@@ -109,8 +111,8 @@ class _CommunityaddState extends State<Communityadd> {
           'uid': user.uid,
           'Question': _textEditingController.text.trim(),
           'Comments': [],
-          'Image': _image!=null?url:'',
-          'Video': _video!=null?url:'',
+          'Image': _image!=null && url!=null ?url:'',
+          'Video': _video!=null && url!=null ?url:'',
           'Likes': [],
           'TimeStamp': DateTime.now().toString(),
         });
@@ -260,7 +262,7 @@ class _CommunityaddState extends State<Communityadd> {
                                       : SizedBox(height: 0, width: 0),
                                 ],
                               ),
-                              Column(
+                              if(args.admin=="Yes" || args.admin=="Super")Column(
                                 children: [
                                   InkWell(
                                     onTap: _addVid,

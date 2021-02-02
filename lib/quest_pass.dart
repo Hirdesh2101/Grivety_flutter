@@ -8,3 +8,7 @@ class Details{
   final int index;
   Details(this.documents,this.index);
 }
+class IsAdmin{
+  final String admin;
+  IsAdmin(this.admin);
+}

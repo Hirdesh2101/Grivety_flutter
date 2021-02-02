@@ -73,6 +73,9 @@ class _AddImageState extends State<AddImage> {
             .doc(user)
             .update({"Image": downloadURL});
       }
+      setState(() {
+        _image = null;
+      });
       Navigator.of(context).pop();
     } on firebase_core.FirebaseException catch (e) {
       print(e);
@@ -97,16 +100,17 @@ class _AddImageState extends State<AddImage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _image == null
-                ? Text('No image selected.')
+                ? Text('Select A Profile Image',style: TextStyle(fontSize: 20),)
                 : CircleAvatar(
                     radius: 85,
                     backgroundImage: FileImage(_image),
                   ),
+            SizedBox(height: 10,),      
             FlatButton(
               onPressed: _isUploading ? null : getImage,
               child: Icon(
                 Icons.add_a_photo,
-                size: 35,
+                size: 40,
               ),
             ),
             _image != null

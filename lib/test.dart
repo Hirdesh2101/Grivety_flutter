@@ -115,7 +115,7 @@ class _TestState extends State<Test> {
                         onTap: () async {
                           final MailOptions mailOptions = MailOptions(
                             subject: 'Bug Report',
-                            recipients: ['hirdeshgarg0012@gmail.com'],
+                            recipients: ['grivetyapp@gmail.com'],
                             isHTML: false,
                           );
                           await FlutterMailer.send(mailOptions);

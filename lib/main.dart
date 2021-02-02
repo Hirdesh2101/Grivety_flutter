@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
             home: appshapshot.connectionState != ConnectionState.done
                 ? Splash()
                 : new SplashScreen(
-                    seconds: 2,
+                    seconds: 1,
                     navigateAfterSeconds: StreamBuilder(
                         stream: FirebaseAuth.instance.authStateChanges(),
                         builder: (ctx, userSnapshot) {
