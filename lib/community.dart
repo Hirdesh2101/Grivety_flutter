@@ -31,13 +31,13 @@ class _CommunityState extends State<Community>
                   .collection('Community')
                   .orderBy('TimeStamp', descending: true)
                   .snapshots(),
-              builder: (context, snapshot) {
+              builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
                 }
-                final documents = snapshot.data.docs;
+                final documents = snapshot.data!.docs;
                 return ListView.builder(
                   cacheExtent: 10,
                   addAutomaticKeepAlives: true,
@@ -46,7 +46,7 @@ class _CommunityState extends State<Community>
                     return Column(
                       key: new ValueKey(index.toString()),
                       children: [
-                        ListTileCommunity(documents, index,widget.admin),
+                        ListTileCommunity(documents, index, widget.admin),
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
@@ -61,8 +61,9 @@ class _CommunityState extends State<Community>
                         if (documents[index].data()['Image'] != '')
                           ImageCom(documents, index),
                         if (documents[index].data()['Video'] != '')
-                          VideoPlayercustom(index,documents),
-                        LikeCom(documents, index,documents[index].data()['Question']),
+                          VideoPlayercustom(index, documents),
+                        LikeCom(documents, index,
+                            documents[index].data()['Question']),
                         Divider(
                           thickness: 2,
                         )
@@ -78,7 +79,7 @@ class _CommunityState extends State<Community>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
-                heroTag: 'button_comm_add',
+                  heroTag: 'button_comm_add',
                   child: Icon(Icons.add),
                   onPressed: () {
                     Navigator.of(context).pushNamed(

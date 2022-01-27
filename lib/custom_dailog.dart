@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomDialogBox extends StatefulWidget {
-  final String title, descriptions, text, branch;
-  final String img;
+  final String? title, descriptions, text, branch;
+  final String? img;
 
   const CustomDialogBox(
       {this.title, this.descriptions, this.text, this.img, this.branch});
@@ -29,7 +29,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
 
   contentBox(context) {
     String s;
-    String temp = widget.branch;
+    String temp = widget.branch!;
     widget.branch == '' ? s = '' : s = '$temp Engineering';
     return Stack(
       children: <Widget>[
@@ -52,7 +52,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                widget.title,
+                widget.title!,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 22,
@@ -67,7 +67,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 height: 15,
               ),
               Text(
-                widget.descriptions,
+                widget.descriptions!,
                 style: TextStyle(color: Colors.black, fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -81,7 +81,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      widget.text,
+                      widget.text!,
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     )),
               ),
@@ -94,16 +94,15 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: Constants.avatarRadius,
-            child: CircleAvatar(
-                radius: 45,
-                backgroundImage:
-                    (widget.img == 'Male' || widget.img == 'Female')
-                        ? widget.img == 'Male'
-                            ? AssetImage("assests/male.jpg")
-                            : AssetImage("assests/female.jpg")
-                        : widget.img == ''
-                            ? AssetImage('assests/logo2.png')
-                            : NetworkImage(widget.img)),
+            child: ClipOval(
+                // radius: 45,
+                child: (widget.img == 'Male' || widget.img == 'Female')
+                    ? widget.img == 'Male'
+                        ? Image.asset("assests/male.jpg")
+                        : Image.asset("assests/female.jpg")
+                    : widget.img == ''
+                        ? Image.asset('assests/logo2.png')
+                        : Image.network(widget.img!)),
           ),
         ),
       ],

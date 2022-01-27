@@ -1,14 +1,15 @@
-class QuesPass{
+class QuesPass {
   final String ques;
   QuesPass(this.ques);
 }
 
-class Details{
+class Details {
   final dynamic documents;
   final int index;
-  Details(this.documents,this.index);
+  Details(this.documents, this.index);
 }
-class IsAdmin{
+
+class IsAdmin {
   final String admin;
   IsAdmin(this.admin);
 }

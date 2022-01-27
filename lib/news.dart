@@ -33,13 +33,13 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
           key: new PageStorageKey('nsnx'),
           child: StreamBuilder(
               stream: FirebaseFirestore.instance.collection('News').snapshots(),
-              builder: (context, snapshot) {
+              builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
                 }
-                final documents = snapshot.data.docs;
+                final documents = snapshot.data!.docs;
                 //print(documents.length);
                 return new ListView.builder(
                   itemBuilder: (_, int index) {
@@ -48,14 +48,15 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                             stream: FirebaseFirestore.instance
                                 .collection('Slider')
                                 .snapshots(),
-                            builder: (context, snapshot) {
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
                               }
-                              final documents1 = snapshot.data.docs;
+                              final documents1 = snapshot.data!.docs;
                               return CarouselSlider.builder(
                                 options: CarouselOptions(
                                   pageViewKey: PageStorageKey('xn'),
@@ -65,102 +66,9 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                                   enlargeCenterPage: true,
                                 ),
                                 itemCount: documents1.length,
-                                itemBuilder:
-                                    (BuildContext context, int itemIndex) =>
-                                        Card(
-                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                                  child: Stack(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.center,
-                                        child: CachedNetworkImage(
-                                          cacheKey: documents1[itemIndex]
-                                              .data()['Image'],
-                                          imageUrl: documents1[itemIndex]
-                                              .data()['Image'],
-                                          placeholder: (context, url) => Center(
-                                              child:
-                                                 Shimmer.fromColors(
-              enabled: true,
-              baseColor: Colors.grey[500],
-              highlightColor: Colors.grey[100],
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: double.infinity,
-                color: Colors.white60,
-              ))),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
-                                      if (widget.admin == 'Yes' ||
-                                          widget.admin == 'Super')
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: PopupMenuButton(
-                                            itemBuilder:
-                                                (BuildContext context) {
-                                              return <PopupMenuEntry>[
-                                                PopupMenuItem(
-                                                  child: Text('Delete'),
-                                                  value: 1,
-                                                ),
-                                              ];
-                                            },
-                                            onSelected: (value) {
-                                              if (value == 1) {
-                                                dynamic docu1 =
-                                                    documents1[itemIndex].id;
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (_) {
-                                                      return AlertDialog(
-                                                        content: Text(
-                                                            "Are you sure you want to delete ?"),
-                                                        actions: <Widget>[
-                                                          FlatButton(
-                                                            child: Text(
-                                                              "Cancel",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                          FlatButton(
-                                                            child: Text(
-                                                              "Delete",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .red),
-                                                            ),
-                                                            onPressed: () {
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      'Slider')
-                                                                  .doc(docu1)
-                                                                  .delete();
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
-                                              }
-                                            },
-                                          ),
-                                        )
-                                    ],
-                                  ),
-                                ),
+                                itemBuilder: (BuildContext context,
+                                        int itemIndex, _) =>
+                                    _cardwidget(documents1, itemIndex, context),
                               );
                             })
                         : widget.admin == 'Yes' || widget.admin == 'Super'
@@ -266,6 +174,85 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                 ),
               )),
       ],
+    );
+  }
+
+  Widget _cardwidget(List documents1, int itemIndex, BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: CachedNetworkImage(
+              cacheKey: documents1[itemIndex].data()['Image'],
+              imageUrl: documents1[itemIndex].data()['Image'],
+              placeholder: (context, url) => Center(
+                  child: Shimmer.fromColors(
+                      enabled: true,
+                      baseColor: Colors.grey[500]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: double.infinity,
+                        color: Colors.white60,
+                      ))),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          ),
+          if (widget.admin == 'Yes' || widget.admin == 'Super')
+            Align(
+              alignment: Alignment.topRight,
+              child: PopupMenuButton(
+                itemBuilder: (BuildContext context) {
+                  return <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: Text('Delete'),
+                      value: 1,
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 1) {
+                    dynamic docu1 = documents1[itemIndex].id;
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            content: Text("Are you sure you want to delete ?"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              FlatButton(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('Slider')
+                                      .doc(docu1)
+                                      .delete();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  }
+                },
+              ),
+            )
+        ],
+      ),
     );
   }
 }

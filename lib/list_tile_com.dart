@@ -18,8 +18,8 @@ class ListTileCommunity extends StatelessWidget {
             .collection('Users')
             .doc(documents[index].data()['uid'])
             .get(),
-        builder: (context, snapshot) {
-          final data = snapshot.data;
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          final data = snapshot.data!;
           if (!snapshot.hasData) {
             return ListTile(
               leading: ClipOval(
@@ -31,14 +31,13 @@ class ListTileCommunity extends StatelessWidget {
             );
           }
           return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.black38,
-              backgroundImage:
-                  (data['Image'] == 'Male' || data['Image'] == 'Female')
-                      ? data['Image'] == 'Male'
-                          ? AssetImage("assests/male.jpg")
-                          : AssetImage("assests/female.jpg")
-                      : NetworkImage(data['Image']),
+            leading: ClipOval(
+              //backgroundColor: Colors.black38,
+              child: (data['Image'] == 'Male' || data['Image'] == 'Female')
+                  ? data['Image'] == 'Male'
+                      ? Image.asset("assests/male.jpg")
+                      : Image.asset("assests/female.jpg")
+                  : Image.network(data['Image']),
             ),
             title: Text(data['Name']),
             subtitle: Text(data['Year']),
@@ -57,7 +56,7 @@ class ListTileCommunity extends StatelessWidget {
                 ];
               },
               onSelected: (value) {
-                final user = FirebaseAuth.instance.currentUser.uid;
+                final user = FirebaseAuth.instance.currentUser!.uid;
                 var obj = [
                   {'User': user}
                 ];

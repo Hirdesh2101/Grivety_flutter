@@ -19,33 +19,32 @@ version: 1.5.8+1
 
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  carousel_slider: ^2.3.1
-  firebase_core: "^0.7.0"
+  carousel_slider:
+  firebase_core: 
   #lottie: ^0.6.0
-  firebase_analytics: ^7.0.1
-  firebase_auth: ^0.20.0+1
-  cloud_firestore: ^0.16.0
-  splashscreen: ^1.3.5
-  better_player: ^0.0.43
-  fluttertoast: ^7.1.1
-  cached_network_image: ^2.5.0
-  image_picker: ^0.6.7+21
-  flutter_mailer: ^1.0.1
-  share: ^0.6.5+4
+  firebase_analytics:
+  firebase_auth: 
+  cloud_firestore:  
+  better_player: 
+  fluttertoast:
+  cached_network_image:
+  image_picker:
+  flutter_mailer:
+  share: 
   #feedback: ^0.3.0
-  firebase_storage: ^7.0.0
-  firebase_messaging: "^8.0.0-dev.14"
-  readmore: ^1.0.1
-  flutter_shimmer: ^1.3.0
-  shimmer: ^1.1.2
-  flutter_cache_manager: ^2.1.1
-  flutter_launcher_icons: ^0.8.1
-  url_launcher: ^5.7.10
+  firebase_storage: 
+  firebase_messaging: 
+  readmore: 
+  flutter_shimmer: 
+  shimmer: 
+  flutter_cache_manager: 
+  flutter_launcher_icons: 
+  url_launcher: 
   #video_thumbnail: ^0.2.5+1
   #path_provider: ^1.6.27
   #flutter_image_compress: ^0.7.0

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:grivety/clubs.dart';
 
 import './edit_profile.dart';
@@ -20,7 +21,7 @@ class Test extends StatefulWidget {
 class _TestState extends State<Test> {
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser.uid;
+    var user = FirebaseAuth.instance.currentUser!.uid;
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -32,7 +33,7 @@ class _TestState extends State<Test> {
                     .collection('Users')
                     .doc(user)
                     .snapshots(),
-                builder: (context, snapshot) {
+                builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: Container(),
@@ -47,22 +48,21 @@ class _TestState extends State<Test> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage: (snapshot.data
-                                                  .data()['Image'] ==
+                                ClipOval(
+                                  //radius: 45,
+                                  child: (snapshot.data!.data()['Image'] ==
                                               'Male' ||
-                                          snapshot.data.data()['Image'] ==
+                                          snapshot.data!.data()['Image'] ==
                                               'Female')
-                                      ? snapshot.data.data()['Image'] == 'Male'
-                                          ? AssetImage("assests/male.jpg")
-                                          : AssetImage("assests/female.jpg")
-                                      : NetworkImage(
-                                          snapshot.data.data()['Image']),
+                                      ? snapshot.data!.data()['Image'] == 'Male'
+                                          ? Image.asset("assests/male.jpg")
+                                          : Image.asset("assests/female.jpg")
+                                      : Image.network(
+                                          snapshot.data!.data()['Image']),
                                 ),
                                 SizedBox(height: 10),
                                 Text('Welcome'),
-                                Text(snapshot.data.data()['Name']),
+                                Text(snapshot.data!.data()['Name']),
                               ],
                             ),
                           ],
@@ -76,15 +76,15 @@ class _TestState extends State<Test> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return CustomDialogBox(
-                                    title: snapshot.data.data()['Name'],
-                                    img: snapshot.data.data()['Image'],
+                                    title: snapshot.data!.data()['Name'],
+                                    img: snapshot.data!.data()['Image'],
                                     text: 'Close',
-                                    descriptions: snapshot.data
+                                    descriptions: snapshot.data!
                                                 .data()['Description'] ==
                                             null
                                         ? "No Description"
-                                        : snapshot.data.data()['Description'],
-                                    branch: snapshot.data.data()['Branch'],
+                                        : snapshot.data!.data()['Description'],
+                                    branch: snapshot.data!.data()['Branch'],
                                   );
                                 });
                           }),
@@ -156,14 +156,14 @@ class _TestState extends State<Test> {
         body: FutureBuilder(
             future:
                 FirebaseFirestore.instance.collection('Users').doc(user).get(),
-            builder: (context, snapshot) {
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               var doc = snapshot.data;
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
               return TabBarView(
                 children: [
-                  Community(doc['Admin']),
+                  Community(doc!['Admin']),
                   News(doc['Admin']),
                   People(doc['Admin']),
                   Clubs(),

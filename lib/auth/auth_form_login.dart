@@ -34,11 +34,11 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
   }
 
   void _trySubmit() {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
     if (isValid) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       widget.submitFn(
           _userEmail.trim(), _userPassword.trim(), _userName.trim(), context);
     }
@@ -48,7 +48,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Colors.blue,
-      
+
       body: Center(
         child: Card(
           margin: EdgeInsets.all(20),
@@ -60,7 +60,10 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
               padding: EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Image.asset('assests/logo1.png',scale: 2.5,),
+                  Image.asset(
+                    'assests/logo1.png',
+                    scale: 2.5,
+                  ),
                   Form(
                     key: _formKey,
                     child: Column(
@@ -70,7 +73,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                           enabled: widget.isLoading ? false : true,
                           key: ValueKey('email'),
                           validator: (value) {
-                            if (value.isEmpty || !value.contains('@')) {
+                            if (value!.isEmpty || !value.contains('@')) {
                               return 'Please enter a valid email address.';
                             }
                             return null;
@@ -80,14 +83,14 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                             labelText: 'Email address',
                           ),
                           onSaved: (value) {
-                            _userEmail = value;
+                            _userEmail = value!;
                           },
                         ),
                         TextFormField(
                           enabled: widget.isLoading ? false : true,
                           key: ValueKey('password'),
                           validator: (value) {
-                            if (value.isEmpty || value.length < 7) {
+                            if (value!.isEmpty || value.length < 7) {
                               return 'Password must be at least 7 characters long.';
                             }
                             return null;
@@ -95,7 +98,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                           decoration: InputDecoration(labelText: 'Password'),
                           obscureText: true,
                           onSaved: (value) {
-                            _userPassword = value;
+                            _userPassword = value!;
                           },
                         ),
                         SizedBox(height: 5),
@@ -112,34 +115,44 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return Dialog(
-                                          child: Wrap(
-                                            children: [Column(
+                                          child: Wrap(children: [
+                                            Column(
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text('Enter Your Email',style: TextStyle(fontSize: 20),),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'Enter Your Email',
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   child: TextField(
-                                                    controller: _textEditingController,
-                                                    keyboardType:
-                                                        TextInputType.emailAddress,
+                                                    controller:
+                                                        _textEditingController,
+                                                    keyboardType: TextInputType
+                                                        .emailAddress,
                                                     autocorrect: false,
                                                   ),
                                                 ),
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
                                                   children: [
                                                     FlatButton(
                                                         onPressed: () =>
-                                                            Navigator.of(context)
+                                                            Navigator.of(
+                                                                    context)
                                                                 .pop(),
                                                         child: Text('Cancel')),
                                                     FlatButton(
                                                         onPressed: () {
                                                           final _auth =
-                                                              FirebaseAuth.instance;
+                                                              FirebaseAuth
+                                                                  .instance;
                                                           _auth.sendPasswordResetEmail(
                                                               email:
                                                                   _textEditingController
@@ -148,20 +161,28 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                                                           Fluttertoast.showToast(
                                                               msg:
                                                                   "Email Send Succesfully",
-                                                              toastLength:
-                                                                  Toast.LENGTH_SHORT,
+                                                              toastLength: Toast
+                                                                  .LENGTH_SHORT,
                                                               gravity:
-                                                                  ToastGravity.BOTTOM,
-                                                              timeInSecForIosWeb: 1,
+                                                                  ToastGravity
+                                                                      .BOTTOM,
+                                                              timeInSecForIosWeb:
+                                                                  1,
                                                               fontSize: 16.0);
-                                                              Navigator.of(context).pop();
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         },
-                                                        child: Text('Send Email',style: TextStyle(color: Colors.blue),)),
+                                                        child: Text(
+                                                          'Send Email',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.blue),
+                                                        )),
                                                   ],
                                                 )
                                               ],
-                                            ),]
-                                          ),
+                                            ),
+                                          ]),
                                         );
                                       });
                                 })
@@ -172,9 +193,13 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
                         if (!widget.isLoading)
                           Container(
                             width: MediaQuery.of(context).size.width * 0.58,
-                            height: MediaQuery.of(context).size.height*0.07,
+                            height: MediaQuery.of(context).size.height * 0.07,
                             decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),gradient: LinearGradient(colors: [Color.fromARGB(255, 52, 63, 95),Color.fromARGB(200, 32, 29, 48)])),
+                                borderRadius: BorderRadius.circular(20),
+                                gradient: LinearGradient(colors: [
+                                  Color.fromARGB(255, 52, 63, 95),
+                                  Color.fromARGB(200, 32, 29, 48)
+                                ])),
                             child: RaisedButton(
                               color: Colors.transparent,
                               shape: RoundedRectangleBorder(

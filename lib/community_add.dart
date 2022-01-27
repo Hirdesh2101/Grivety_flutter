@@ -14,11 +14,11 @@ class Communityadd extends StatefulWidget {
 }
 
 class _CommunityaddState extends State<Communityadd> {
-  File _image;
-  File _video;
+  File? _image;
+  File? _video;
   final _picker = ImagePicker();
   //bool _isUploading = false;
-  String url;
+  String? url;
   TextEditingController _textEditingController = TextEditingController();
   bool _isUploading = false;
   @override
@@ -69,50 +69,50 @@ class _CommunityaddState extends State<Communityadd> {
 
   @override
   Widget build(BuildContext context) {
-    final IsAdmin args = ModalRoute.of(context).settings.arguments;
+    final IsAdmin args = ModalRoute.of(context)!.settings.arguments as IsAdmin;
     _addQues() async {
       if (_textEditingController.text.trim() != '') {
         setState(() {
           _isUploading = true;
         });
-        if(_image!=null && _video!=null){
+        if (_image != null && _video != null) {
           Fluttertoast.showToast(
-            msg: "Add either An Image or A Video",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: 16.0);
-        }else if(_image!=null && _video==null){
+              msg: "Add either An Image or A Video",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 16.0);
+        } else if (_image != null && _video == null) {
           Key s = UniqueKey();
-      String temp = s.toString();
-      await firebase_storage.FirebaseStorage.instance
-          .ref('community/$temp')
-          .putFile(_image);
-      String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref('community/$temp')
-          .getDownloadURL();
-      url = downloadURL;
-        }else if (_video!=null && _image ==null){
+          String temp = s.toString();
+          await firebase_storage.FirebaseStorage.instance
+              .ref('community/$temp')
+              .putFile(_image!);
+          String downloadURL = await firebase_storage.FirebaseStorage.instance
+              .ref('community/$temp')
+              .getDownloadURL();
+          url = downloadURL;
+        } else if (_video != null && _image == null) {
           Key s = UniqueKey();
-      String temp = s.toString();
-      await firebase_storage.FirebaseStorage.instance
-          .ref('community/$temp')
-          .putFile(_video);
-      String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref('community/$temp')
-          .getDownloadURL();
-      url = downloadURL;
+          String temp = s.toString();
+          await firebase_storage.FirebaseStorage.instance
+              .ref('community/$temp')
+              .putFile(_video!);
+          String downloadURL = await firebase_storage.FirebaseStorage.instance
+              .ref('community/$temp')
+              .getDownloadURL();
+          url = downloadURL;
         }
         final user = FirebaseAuth.instance.currentUser;
         await FirebaseFirestore.instance
             .collection('Community')
             .doc(DateTime.now().toString())
             .set({
-          'uid': user.uid,
+          'uid': user!.uid,
           'Question': _textEditingController.text.trim(),
           'Comments': [],
-          'Image': _image!=null && url!=null ?url:'',
-          'Video': _video!=null && url!=null ?url:'',
+          'Image': _image != null && url != null ? url : '',
+          'Video': _video != null && url != null ? url : '',
           'Likes': [],
           'TimeStamp': DateTime.now().toString(),
         });
@@ -245,13 +245,13 @@ class _CommunityaddState extends State<Communityadd> {
                                                         .width *
                                                     0.13,
                                                 child: Text(
-                                                  '${_image.path.split('/').last}',
+                                                  '${_image!.path.split('/').last}',
                                                   maxLines: 1,
                                                 )),
-                                                IconButton(
-                                                  iconSize: 15,
-                                                icon: Icon(
-                                                    Icons.cancel_outlined),
+                                            IconButton(
+                                                iconSize: 15,
+                                                icon:
+                                                    Icon(Icons.cancel_outlined),
                                                 onPressed: () {
                                                   setState(() {
                                                     _image = null;
@@ -262,65 +262,66 @@ class _CommunityaddState extends State<Communityadd> {
                                       : SizedBox(height: 0, width: 0),
                                 ],
                               ),
-                              if(args.admin=="Yes" || args.admin=="Super")Column(
-                                children: [
-                                  InkWell(
-                                    onTap: _addVid,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Icon(Icons.insert_link),
-                                          _video != null
-                                              ? Text('Change Video')
-                                              : Text('Add Video'),
-                                        ],
+                              if (args.admin == "Yes" || args.admin == "Super")
+                                Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: _addVid,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Icon(Icons.insert_link),
+                                            _video != null
+                                                ? Text('Change Video')
+                                                : Text('Add Video'),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  _video != null
-                                      ? Container(
-                                          padding: EdgeInsets.all(8.0),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.38,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(children: [
-                                            Icon(
-                                              Icons.video_library,
-                                              color: Colors.red,
+                                    _video != null
+                                        ? Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.38,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
-                                            SizedBox(width: 2),
-                                            Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.13,
-                                                child: Text(
-                                                  '${_video.path.split('/').last}',
-                                                  maxLines: 1,
-                                                )),
-                                                IconButton(
+                                            child: Row(children: [
+                                              Icon(
+                                                Icons.video_library,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(width: 2),
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.13,
+                                                  child: Text(
+                                                    '${_video!.path.split('/').last}',
+                                                    maxLines: 1,
+                                                  )),
+                                              IconButton(
                                                   iconSize: 15,
-                                                icon: Icon(
-                                                    Icons.cancel_outlined),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _video = null;
-                                                  });
-                                                }),
-                                          ]),
-                                        )
-                                      : SizedBox(height: 0, width: 0),
-                                ],
-                              ),
+                                                  icon: Icon(
+                                                      Icons.cancel_outlined),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _video = null;
+                                                    });
+                                                  }),
+                                            ]),
+                                          )
+                                        : SizedBox(height: 0, width: 0),
+                                  ],
+                                ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: RaisedButton(

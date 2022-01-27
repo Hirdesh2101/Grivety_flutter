@@ -23,13 +23,13 @@ class _NewsAddState extends State<NewsAdd> {
     super.dispose();
   }
 
-  File _image;
+  File? _image;
 
   final picker = ImagePicker();
 
   bool _isUploading = false;
 
-  String url;
+  String? url;
 
   Future getImage() async {
     final pickedFile =
@@ -95,7 +95,7 @@ class _NewsAddState extends State<NewsAdd> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-              child: Padding(
+        child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +106,7 @@ class _NewsAddState extends State<NewsAdd> {
                   : Padding(
                       padding: const EdgeInsets.all(18.0),
                       child: Image.file(
-                        _image,
+                        _image!,
                         width: MediaQuery.of(context).size.width * 0.75,
                         height: MediaQuery.of(context).size.height * 0.20,
                       ),
@@ -161,7 +161,7 @@ class _NewsAddState extends State<NewsAdd> {
                           setState(() {
                             _isUploading = true;
                           });
-                          _uploadFile(_image, _textEditingController.text,
+                          _uploadFile(_image!, _textEditingController.text,
                               _textEditingController2.text);
                         } else {
                           Fluttertoast.showToast(

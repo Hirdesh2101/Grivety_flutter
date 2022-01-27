@@ -10,7 +10,6 @@ import 'package:grivety/auth/register.dart';
 import 'package:grivety/comments.dart';
 import 'package:grivety/edit_profile.dart';
 import 'package:grivety/news_dtail.dart';
-import 'package:splashscreen/splashscreen.dart';
 import 'package:grivety/community_add.dart';
 import 'package:grivety/splash.dart';
 import './test.dart';
@@ -37,25 +36,18 @@ class _MyAppState extends State<MyApp> {
             darkTheme: ThemeData.dark(),
             home: appshapshot.connectionState != ConnectionState.done
                 ? Splash()
-                : new SplashScreen(
-                    seconds: 1,
-                    navigateAfterSeconds: StreamBuilder(
-                        stream: FirebaseAuth.instance.authStateChanges(),
-                        builder: (ctx, userSnapshot) {
-                          if (userSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Splash();
-                          }
-                          if (userSnapshot.hasData) {
-                            return Test();
-                          }
-                          return Loginscreen();
-                        }),
-                    image: new Image.asset('assests/logo1.png'),
-                    backgroundColor: Colors.black26,
-                    styleTextUnderTheLoader: new TextStyle(),
-                    photoSize: 100.0,
-                    loaderColor: Colors.white),
+                : StreamBuilder(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (ctx, userSnapshot) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Splash();
+                      }
+                      if (userSnapshot.hasData) {
+                        return Test();
+                      }
+                      return Loginscreen();
+                    }),
             routes: {
               Test.routeName: (ctx) => Test(),
               Splash.routeName: (ctx) => Splash(),
@@ -64,7 +56,7 @@ class _MyAppState extends State<MyApp> {
               Comments.routeName: (ctx) => Comments(),
               Register.routeName: (ctx) => Register(),
               AddImage.routeName: (ctx) => AddImage(),
-              EditProfile.routeName : (ctx) => EditProfile(),
+              EditProfile.routeName: (ctx) => EditProfile(),
               AddNews.routeName: (ctx) => AddNews(),
               NewsDetail.routeName: (ctx) => NewsDetail(),
             },

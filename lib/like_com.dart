@@ -11,44 +11,46 @@ class LikeCom extends StatelessWidget {
   LikeCom(this.documents, this.index, this.question);
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser.uid;
+    final user = FirebaseAuth.instance.currentUser!.uid;
     dynamic docu = documents[index].id;
     List<dynamic> list = documents[index]['Likes'];
     return Row(children: [
-      SizedBox(width: 5,),
+      SizedBox(
+        width: 5,
+      ),
       Row(
         children: [
           IconButton(
-            iconSize: 24,
-            splashRadius: 28,
+              iconSize: 24,
+              splashRadius: 28,
               icon: Icon(
                 list.contains(user) ? Icons.favorite : Icons.favorite_border,
                 color: list.contains(user) ? Colors.redAccent : Colors.white,
-              ), onPressed: () async {
-            var obj = [user];
-            if (list.contains(user)) {
-              FirebaseFirestore.instance
-                  .collection('Community')
-                  .doc(docu)
-                  .update({'Likes': FieldValue.arrayRemove(obj)});
-            } else {
-              FirebaseFirestore.instance
-                  .collection('Community')
-                  .doc(docu)
-                  .update({'Likes': FieldValue.arrayUnion(obj)});
-            }
-          }),
+              ),
+              onPressed: () async {
+                var obj = [user];
+                if (list.contains(user)) {
+                  FirebaseFirestore.instance
+                      .collection('Community')
+                      .doc(docu)
+                      .update({'Likes': FieldValue.arrayRemove(obj)});
+                } else {
+                  FirebaseFirestore.instance
+                      .collection('Community')
+                      .doc(docu)
+                      .update({'Likes': FieldValue.arrayUnion(obj)});
+                }
+              }),
           Text(documents[index].data()['Likes'].length.toString()),
         ],
       ),
-      SizedBox(width: 8,),
+      SizedBox(
+        width: 8,
+      ),
       Row(
         children: [
           IconButton(
-            
-            icon:  Icon(Icons.chat_bubble_outline),
-              
-            
+            icon: Icon(Icons.chat_bubble_outline),
             onPressed: () {
               print(documents[index].data()['Question']);
               Navigator.of(context).pushNamed(Comments.routeName,

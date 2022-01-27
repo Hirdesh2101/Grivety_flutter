@@ -23,7 +23,8 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
-    final QuesPass args = ModalRoute.of(context).settings.arguments;
+    final QuesPass args =
+        ModalRoute.of(context)!.settings.arguments as QuesPass;
     print(args.ques);
     _addcomment() async {
       if (_textEditingController.text.trim() != '') {
@@ -40,7 +41,7 @@ class _CommentsState extends State<Comments> {
         });
         final user = FirebaseAuth.instance.currentUser;
         var obj = [
-          {'Com': _textEditingController.text.trim(), 'uid': user.uid}
+          {'Com': _textEditingController.text.trim(), 'uid': user!.uid}
         ];
         await FirebaseFirestore.instance
             .collection('Community')
@@ -90,7 +91,7 @@ class _CommentsState extends State<Comments> {
                       );
                     }
                     // String docu = snapshot.data.docs[0].id;
-                    List<dynamic> list = snapshot.data.docs[0]['Comments'];
+                    List<dynamic> list = snapshot.data!.docs[0]['Comments'];
                     print(list);
                     if (list.length == 0) {
                       return Center(child: Text("No Comments Yet...."));
@@ -105,8 +106,9 @@ class _CommentsState extends State<Comments> {
                                     .collection('Users')
                                     .doc(list[index]['uid'])
                                     .snapshots(),
-                                builder: (context, snapshot) {
-                                  final data = snapshot.data;
+                                builder: (context,
+                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                  final data = snapshot.data!;
                                   if (!snapshot.hasData) {
                                     return ListTile(
                                       leading: CircleAvatar(
@@ -117,16 +119,16 @@ class _CommentsState extends State<Comments> {
                                     );
                                   }
                                   return ListTile(
-                                    leading: CircleAvatar(
-                                        radius: 15,
-                                        backgroundImage: (data['Image'] ==
-                                                    'Male' ||
+                                    leading: ClipOval(
+                                        // radius: 15,
+                                        child: (data['Image'] == 'Male' ||
                                                 data['Image'] == 'Female')
                                             ? data['Image'] == 'Male'
-                                                ? AssetImage("assests/male.jpg")
-                                                : AssetImage(
+                                                ? Image.asset(
+                                                    "assests/male.jpg")
+                                                : Image.asset(
                                                     "assests/female.jpg")
-                                            : NetworkImage(data['Image'])),
+                                            : Image.network(data['Image'])),
                                     title: Text(data['Name']),
                                   );
                                 }),

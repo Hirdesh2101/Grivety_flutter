@@ -12,13 +12,13 @@ class SliderAdd extends StatefulWidget {
 }
 
 class _SliderAddState extends State<SliderAdd> {
-  File _image;
+  File? _image;
 
   final picker = ImagePicker();
 
   bool _isUploading = false;
 
-  String url;
+  String? url;
 
   Future getImage() async {
     final pickedFile =
@@ -86,7 +86,7 @@ class _SliderAddState extends State<SliderAdd> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-              child: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -94,7 +94,7 @@ class _SliderAddState extends State<SliderAdd> {
                 ? Text('No image selected.')
                 : Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: Image.file(_image),
+                    child: Image.file(_image!),
                   ),
             FlatButton(
               onPressed: _isUploading ? null : getImage,
@@ -109,7 +109,7 @@ class _SliderAddState extends State<SliderAdd> {
                     onPressed: _isUploading
                         ? null
                         : () {
-                            _uploadFile(_image);
+                            _uploadFile(_image!);
                           },
                   )
                 : Container(),

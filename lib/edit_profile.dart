@@ -14,10 +14,10 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  File _image;
+  File? _image;
   final _picker = ImagePicker();
   bool _isUploading = false;
-  String url;
+  String? url;
   TextEditingController _textEditingController = TextEditingController();
   @override
   void dispose() {
@@ -46,7 +46,7 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-  var user = FirebaseAuth.instance.currentUser.uid;
+  var user = FirebaseAuth.instance.currentUser!.uid;
   Future<void> _uploadFile(File img) async {
     try {
       setState(() {
@@ -134,7 +134,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser.uid;
+    var user = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile'),
@@ -146,7 +146,7 @@ class _EditProfileState extends State<EditProfile> {
                   .collection('Users')
                   .doc(user)
                   .snapshots(),
-              builder: (context, snapshot) {
+              builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(),
@@ -161,9 +161,9 @@ class _EditProfileState extends State<EditProfile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _image == null
-                          ? (snapshot.data.data()['Image'] == 'Male' ||
-                                  snapshot.data.data()['Image'] == 'Female')
-                              ? snapshot.data.data()['Image'] == 'Male'
+                          ? (snapshot.data!.data()['Image'] == 'Male' ||
+                                  snapshot.data!.data()['Image'] == 'Female')
+                              ? snapshot.data!.data()['Image'] == 'Male'
                                   ? CircleAvatar(
                                       radius: 85,
                                       backgroundImage:
@@ -175,12 +175,12 @@ class _EditProfileState extends State<EditProfile> {
                               : CircleAvatar(
                                   radius: 85,
                                   backgroundImage: NetworkImage(
-                                    snapshot.data.data()['Image'],
+                                    snapshot.data!.data()['Image'],
                                   ),
                                 )
                           : CircleAvatar(
                               radius: 85,
-                              backgroundImage: FileImage(_image),
+                              backgroundImage: FileImage(_image!),
                             ),
                       FlatButton(
                         onPressed: _isUploading ? null : getImage,
@@ -211,7 +211,7 @@ class _EditProfileState extends State<EditProfile> {
                             ? null
                             : () {
                                 _image != null
-                                    ? _uploadFile(_image)
+                                    ? _uploadFile(_image!)
                                     : _updateDis();
                               },
                       ),

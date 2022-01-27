@@ -15,8 +15,8 @@ class People extends StatefulWidget {
 class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  String _branch;
-  String _year;
+  String? _branch;
+  String? _year;
   bool _isVisible = false;
   void _run(int _showing1, int _showing2) {
     switch (_showing1) {
@@ -99,75 +99,76 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                       .where('Branch', isEqualTo: _branch)
                       .where("Year", isEqualTo: _year)
                       .get(),
-                  builder: (_, snapshot) {
+                  builder: (_, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: ProfileShimmer(
-          padding: EdgeInsets.all(2.0),
-        ),
+                          padding: EdgeInsets.all(2.0),
+                        ),
                       );
                     }
-                    final documents = snapshot.data.docs;
+                    final documents = snapshot.data!.docs;
                     return Expanded(
                       child: ListView.builder(
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (_, int index) {
                           return ListTile(
                               trailing: widget.admin == 'Super'
-                                  ? documents[index]
-                                                        .data()['Admin'] ==
-                                                    'Super'?SizedBox(width:0,height:0):PopupMenuButton(
-                                      itemBuilder: (BuildContext context) {
-                                        return <PopupMenuEntry>[
-                                          PopupMenuItem(
-                                            child: documents[index]
-                                                        .data()['Admin'] ==
-                                                    'Yes'
-                                                ? Text('Remove Admin')
-                                                : Text('Make Admin'),
-                                            value: 1,
-                                          ),
-                                        ];
-                                      },
-                                      onSelected: (value) {
-                                        if (value == 1) {
-                                          dynamic docu = documents[index].id;
-                                          if (documents[index]
-                                                  .data()['Admin'] ==
-                                              'Yes') {
-                                            FirebaseFirestore.instance
-                                                .collection('Users')
-                                                .doc(docu)
-                                                .update({'Admin': 'NO'});
-                                          } else if(documents[index]
-                                                  .data()['Admin'] ==
-                                              'NO') {
-                                            FirebaseFirestore.instance
-                                                .collection('Users')
-                                                .doc(docu)
-                                                .update({'Admin': 'Yes'});
-                                          }
-                                          Fluttertoast.showToast(
-                                              msg: "Please Refresh",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              fontSize: 16.0);
-                                        }
-                                      },
-                                    )
-                                  : SizedBox(width:0,height:0),
+                                  ? documents[index].data()['Admin'] == 'Super'
+                                      ? SizedBox(width: 0, height: 0)
+                                      : PopupMenuButton(
+                                          itemBuilder: (BuildContext context) {
+                                            return <PopupMenuEntry>[
+                                              PopupMenuItem(
+                                                child: documents[index]
+                                                            .data()['Admin'] ==
+                                                        'Yes'
+                                                    ? Text('Remove Admin')
+                                                    : Text('Make Admin'),
+                                                value: 1,
+                                              ),
+                                            ];
+                                          },
+                                          onSelected: (value) {
+                                            if (value == 1) {
+                                              dynamic docu =
+                                                  documents[index].id;
+                                              if (documents[index]
+                                                      .data()['Admin'] ==
+                                                  'Yes') {
+                                                FirebaseFirestore.instance
+                                                    .collection('Users')
+                                                    .doc(docu)
+                                                    .update({'Admin': 'NO'});
+                                              } else if (documents[index]
+                                                      .data()['Admin'] ==
+                                                  'NO') {
+                                                FirebaseFirestore.instance
+                                                    .collection('Users')
+                                                    .doc(docu)
+                                                    .update({'Admin': 'Yes'});
+                                              }
+                                              Fluttertoast.showToast(
+                                                  msg: "Please Refresh",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  fontSize: 16.0);
+                                            }
+                                          },
+                                        )
+                                  : SizedBox(width: 0, height: 0),
                               key: Key(index.toString()),
-                              leading: CircleAvatar(
-                                backgroundImage: (documents[index]
-                                                .data()['Image'] ==
+                              leading: ClipOval(
+                                child: documents[index].data()['Image'] ==
                                             'Male' ||
                                         documents[index].data()['Image'] ==
-                                            'Female')
+                                            'Female'
                                     ? documents[index].data()['Image'] == 'Male'
-                                        ? AssetImage("assests/male.jpg")
-                                        : AssetImage("assests/female.jpg")
-                                    : NetworkImage(
+                                        ? Image.asset("assests/male.jpg")
+                                        : Image.asset("assests/female.jpg")
+                                    : Image.network(
                                         documents[index].data()['Image']),
                               ),
                               title: Text(documents[index].data()['Name']),

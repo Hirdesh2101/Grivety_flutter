@@ -15,7 +15,6 @@ class _RegisterState extends State<Register> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
 
-  
   void _submitAuthForm(
     String email,
     String password,
@@ -25,32 +24,32 @@ class _RegisterState extends State<Register> {
     String year,
     BuildContext ctx,
   ) async {
-      //UserCredential authResult;
+    //UserCredential authResult;
 
     try {
       setState(() {
         _isLoading = true;
       });
-        await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        final user =  FirebaseAuth.instance.currentUser;
-        
-        FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
-          'Name': username,
-          'Image': gender,
-          'Email':email,
-          'Year': year,
-          'Branch': branch,
-          'Admin': 'NO',
-        });
-        Navigator.of(context).pushReplacementNamed(AddImage.routeName);
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = FirebaseAuth.instance.currentUser;
+
+      FirebaseFirestore.instance.collection('Users').doc(user!.uid).set({
+        'Name': username,
+        'Image': gender,
+        'Email': email,
+        'Year': year,
+        'Branch': branch,
+        'Admin': 'NO',
+      });
+      Navigator.of(context).pushReplacementNamed(AddImage.routeName);
     } on PlatformException catch (err) {
       var message = 'An error occurred, pelase check your credentials!';
 
       if (err.message != null) {
-        message = err.message;
+        message = err.message!;
       }
 
       ScaffoldMessenger.of(ctx).showSnackBar(

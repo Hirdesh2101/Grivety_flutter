@@ -12,7 +12,7 @@ class Loginscreen extends StatefulWidget {
 class _LoginscreenState extends State<Loginscreen> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
-  
+
   void _submitAuthForm(
     String email,
     String password,
@@ -25,7 +25,7 @@ class _LoginscreenState extends State<Loginscreen> {
       setState(() {
         _isLoading = true;
       });
-       await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -34,7 +34,7 @@ class _LoginscreenState extends State<Loginscreen> {
       var message = 'An error occurred, please check your credentials!';
 
       if (err.message != null) {
-        message = err.message;
+        message = err.message!;
       }
 
       ScaffoldMessenger.of(ctx).showSnackBar(

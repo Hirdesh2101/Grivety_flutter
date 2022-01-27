@@ -14,10 +14,10 @@ class AddImage extends StatefulWidget {
 }
 
 class _AddImageState extends State<AddImage> {
-  File _image;
+  File? _image;
   final picker = ImagePicker();
   bool _isUploading = false;
-  String url;
+  String? url;
 
   Future getImage() async {
     final pickedFile = await picker.getImage(
@@ -40,7 +40,7 @@ class _AddImageState extends State<AddImage> {
     });
   }
 
-  var user = FirebaseAuth.instance.currentUser.uid;
+  var user = FirebaseAuth.instance.currentUser!.uid;
   Future<void> _uploadFile(File img) async {
     try {
       setState(() {
@@ -100,12 +100,17 @@ class _AddImageState extends State<AddImage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _image == null
-                ? Text('Select A Profile Image',style: TextStyle(fontSize: 20),)
+                ? Text(
+                    'Select A Profile Image',
+                    style: TextStyle(fontSize: 20),
+                  )
                 : CircleAvatar(
                     radius: 85,
-                    backgroundImage: FileImage(_image),
+                    backgroundImage: FileImage(_image!),
                   ),
-            SizedBox(height: 10,),      
+            SizedBox(
+              height: 10,
+            ),
             FlatButton(
               onPressed: _isUploading ? null : getImage,
               child: Icon(
@@ -119,7 +124,7 @@ class _AddImageState extends State<AddImage> {
                     onPressed: _isUploading
                         ? null
                         : () {
-                            _uploadFile(_image);
+                            _uploadFile(_image!);
                           },
                   )
                 : Container(),

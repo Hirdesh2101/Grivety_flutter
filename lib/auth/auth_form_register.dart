@@ -28,14 +28,14 @@ class _AuthFormState extends State<AuthForm> {
   var _userName = '';
   var _userPassword = '';
   int _showing = 0;
-  int _showing2 =0;
-  var _branch ='';
-  var _year ='';
+  int _showing2 = 0;
+  var _branch = '';
+  var _year = '';
 
   void _trySubmit() {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if(_showing==0){
+    if (_showing == 0) {
       Fluttertoast.showToast(
           msg: "Please Select Branch",
           toastLength: Toast.LENGTH_SHORT,
@@ -45,7 +45,7 @@ class _AuthFormState extends State<AuthForm> {
           // textColor: Colors.white,
           fontSize: 16.0);
     }
-    if(_showing2==0){
+    if (_showing2 == 0) {
       Fluttertoast.showToast(
           msg: "Please Select Year",
           toastLength: Toast.LENGTH_SHORT,
@@ -66,8 +66,8 @@ class _AuthFormState extends State<AuthForm> {
           fontSize: 16.0);
     }
 
-    if (isValid && _gender != ''&&_showing!=0 &&_showing2!=0) {
-      _formKey.currentState.save();
+    if (isValid && _gender != '' && _showing != 0 && _showing2 != 0) {
+      _formKey.currentState!.save();
       switch (_showing) {
         case 1:
           _branch = 'Computer Science';
@@ -94,7 +94,7 @@ class _AuthFormState extends State<AuthForm> {
           _branch = 'Architecture';
           break;
       }
-       switch (_showing2) {
+      switch (_showing2) {
         case 1:
           _year = '1st';
           break;
@@ -112,15 +112,15 @@ class _AuthFormState extends State<AuthForm> {
           break;
       }
       widget.submitFn(_userEmail.trim(), _userPassword.trim(), _userName.trim(),
-          _gender.trim(),_branch.trim(),_year.trim(), context);
+          _gender.trim(), _branch.trim(), _year.trim(), context);
     }
   }
 
   int _radioValue = 0;
   String _gender = '';
-  void _handelRadioValueChange(int value) {
+  void _handelRadioValueChange(int? value) {
     setState(() {
-      _radioValue = value;
+      _radioValue = value!;
     });
     switch (_radioValue) {
       case 1:
@@ -135,7 +135,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     // backgroundColor: Colors.blue,
+      // backgroundColor: Colors.blue,
       appBar: AppBar(
         elevation: 0,
         //backgroundColor: Colors.blue,
@@ -158,7 +158,7 @@ class _AuthFormState extends State<AuthForm> {
                       enabled: widget.isLoading ? false : true,
                       key: ValueKey('email'),
                       validator: (value) {
-                        if (value.isEmpty || !value.contains('@')) {
+                        if (value!.isEmpty || !value.contains('@')) {
                           return 'Please enter a valid email address.';
                         }
                         return null;
@@ -168,24 +168,24 @@ class _AuthFormState extends State<AuthForm> {
                         labelText: 'Email address',
                       ),
                       onSaved: (value) {
-                        _userEmail = value;
+                        _userEmail = value!;
                       },
                     ),
                     TextFormField(
                       enabled: widget.isLoading ? false : true,
                       key: ValueKey('username'),
                       validator: (value) {
-                        if (value.isEmpty || value.length < 4) {
+                        if (value!.isEmpty || value.length < 4) {
                           return 'Please enter at least 4 characters';
                         }
                         return null;
                       },
                       decoration: InputDecoration(labelText: 'Username'),
                       onSaved: (value) {
-                        _userName = value;
+                        _userName = value!;
                       },
                     ),
-                    SizedBox(height:10),
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         Text('Select Branch: '),
@@ -248,7 +248,7 @@ class _AuthFormState extends State<AuthForm> {
                                 ],
                                 onChanged: (value) {
                                   setState(() {
-                                    _showing = value;
+                                    _showing = value as int;
                                   });
                                 },
                               ),
@@ -257,7 +257,7 @@ class _AuthFormState extends State<AuthForm> {
                         ),
                       ],
                     ),
-                    SizedBox(height:10),
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         Text('Select Year: '),
@@ -289,8 +289,7 @@ class _AuthFormState extends State<AuthForm> {
                                     value: 1,
                                   ),
                                   DropdownMenuItem(
-                                    child:
-                                        Text('2nd'),
+                                    child: Text('2nd'),
                                     value: 2,
                                   ),
                                   DropdownMenuItem(
@@ -308,7 +307,7 @@ class _AuthFormState extends State<AuthForm> {
                                 ],
                                 onChanged: (value) {
                                   setState(() {
-                                    _showing2 = value;
+                                    _showing2 = value as int;
                                   });
                                 },
                               ),
@@ -321,7 +320,7 @@ class _AuthFormState extends State<AuthForm> {
                       enabled: widget.isLoading ? false : true,
                       key: ValueKey('password'),
                       validator: (value) {
-                        if (value.isEmpty || value.length < 7) {
+                        if (value!.isEmpty || value.length < 7) {
                           return 'Password must be at least 7 characters long.';
                         }
                         return null;
@@ -329,7 +328,7 @@ class _AuthFormState extends State<AuthForm> {
                       decoration: InputDecoration(labelText: 'Password'),
                       obscureText: true,
                       onSaved: (value) {
-                        _userPassword = value;
+                        _userPassword = value!;
                       },
                     ),
                     Row(
@@ -354,9 +353,13 @@ class _AuthFormState extends State<AuthForm> {
                     if (!widget.isLoading)
                       Container(
                         width: MediaQuery.of(context).size.width * 0.58,
-                            height: MediaQuery.of(context).size.height*0.07,
-                            decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),gradient: LinearGradient(colors: [Color.fromARGB(255, 52, 63, 95),Color.fromARGB(200, 32, 29, 48)])),
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(colors: [
+                              Color.fromARGB(255, 52, 63, 95),
+                              Color.fromARGB(200, 32, 29, 48)
+                            ])),
                         child: RaisedButton(
                           color: Colors.transparent,
                           shape: RoundedRectangleBorder(

@@ -5,8 +5,8 @@ class PeopleFilter extends StatefulWidget {
     int _showing1,
     int _showing2,
   ) _run;
-  final Function()_remove;
-  PeopleFilter(this._run,this._remove);
+  final Function() _remove;
+  PeopleFilter(this._run, this._remove);
   @override
   _PeopleFilterState createState() => _PeopleFilterState();
 }
@@ -15,10 +15,11 @@ class _PeopleFilterState extends State<PeopleFilter> {
   _applyFilter() {
     widget._run(_showing, _showing2);
   }
-  _remove(){
+
+  _remove() {
     setState(() {
-      _showing =0;
-      _showing2 =0;
+      _showing = 0;
+      _showing2 = 0;
     });
     widget._remove();
   }
@@ -85,7 +86,7 @@ class _PeopleFilterState extends State<PeopleFilter> {
                 ],
                 onChanged: (value) {
                   setState(() {
-                    _showing = value;
+                    _showing = value as int;
                   });
                 },
               ),
@@ -136,7 +137,7 @@ class _PeopleFilterState extends State<PeopleFilter> {
               ],
               onChanged: (value) {
                 setState(() {
-                  _showing2 = value;
+                  _showing2 = value as int;
                 });
               },
             ),
