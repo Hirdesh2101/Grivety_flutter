@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,13 +14,12 @@ class ListTileCommunity extends StatelessWidget {
   Widget build(BuildContext context) {
     //print(admin);
     return FutureBuilder(
-        // key: new Key(index.toString()),
         future: FirebaseFirestore.instance
             .collection('Users')
             .doc(documents[index].data()['uid'])
             .get(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          final data = snapshot.data!;
+          final data = snapshot.data;
           if (!snapshot.hasData) {
             return ListTile(
               leading: ClipOval(
@@ -31,14 +31,26 @@ class ListTileCommunity extends StatelessWidget {
             );
           }
           return ListTile(
-            leading: ClipOval(
-              //backgroundColor: Colors.black38,
-              child: (data['Image'] == 'Male' || data['Image'] == 'Female')
-                  ? data['Image'] == 'Male'
-                      ? Image.asset("assests/male.jpg")
-                      : Image.asset("assests/female.jpg")
-                  : Image.network(data['Image']),
-            ),
+            leading: (data!['Image'] == 'Male' || data['Image'] == 'Female')
+                ? data['Image'] == 'Male'
+                    ? const CircleAvatar(
+                        radius: 23,
+                        backgroundImage: AssetImage("assests/male.jpg"))
+                    : const CircleAvatar(
+                        radius: 23,
+                        backgroundImage: AssetImage("assests/female.jpg"))
+                : ClipOval(
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: data['Image'],
+                      height: 40,
+                      width: 40,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
             title: Text(data['Name']),
             subtitle: Text(data['Year']),
             trailing: PopupMenuButton(

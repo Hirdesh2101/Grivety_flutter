@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import './peoplefilter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -160,17 +161,32 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                                         )
                                   : SizedBox(width: 0, height: 0),
                               key: Key(index.toString()),
-                              leading: ClipOval(
-                                child: documents[index].data()['Image'] ==
-                                            'Male' ||
-                                        documents[index].data()['Image'] ==
-                                            'Female'
-                                    ? documents[index].data()['Image'] == 'Male'
-                                        ? Image.asset("assests/male.jpg")
-                                        : Image.asset("assests/female.jpg")
-                                    : Image.network(
-                                        documents[index].data()['Image']),
-                              ),
+                              leading: (documents[index].data()['Image'] ==
+                                          'Male' ||
+                                      documents[index].data()['Image'] ==
+                                          'Female')
+                                  ? documents[index].data()['Image'] == 'Male'
+                                      ? const CircleAvatar(
+                                          radius: 40,
+                                          backgroundImage:
+                                              AssetImage("assests/male.jpg"))
+                                      : const CircleAvatar(
+                                          radius: 40,
+                                          backgroundImage:
+                                              AssetImage("assests/female.jpg"))
+                                  : ClipOval(
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl:
+                                            documents[index].data()['Image'],
+                                        height: 40,
+                                        width: 40,
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    ),
                               title: Text(documents[index].data()['Name']),
                               onTap: () {
                                 showDialog(

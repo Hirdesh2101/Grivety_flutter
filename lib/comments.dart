@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +26,6 @@ class _CommentsState extends State<Comments> {
   Widget build(BuildContext context) {
     final QuesPass args =
         ModalRoute.of(context)!.settings.arguments as QuesPass;
-    print(args.ques);
     _addcomment() async {
       if (_textEditingController.text.trim() != '') {
         setState(() {
@@ -92,7 +92,6 @@ class _CommentsState extends State<Comments> {
                     }
                     // String docu = snapshot.data.docs[0].id;
                     List<dynamic> list = snapshot.data!.docs[0]['Comments'];
-                    print(list);
                     if (list.length == 0) {
                       return Center(child: Text("No Comments Yet...."));
                     }
@@ -119,16 +118,30 @@ class _CommentsState extends State<Comments> {
                                     );
                                   }
                                   return ListTile(
-                                    leading: ClipOval(
-                                        // radius: 15,
-                                        child: (data['Image'] == 'Male' ||
-                                                data['Image'] == 'Female')
-                                            ? data['Image'] == 'Male'
-                                                ? Image.asset(
-                                                    "assests/male.jpg")
-                                                : Image.asset(
-                                                    "assests/female.jpg")
-                                            : Image.network(data['Image'])),
+                                    leading: (data['Image'] == 'Male' ||
+                                            data['Image'] == 'Female')
+                                        ? data['Image'] == 'Male'
+                                            ? const CircleAvatar(
+                                                radius: 40,
+                                                backgroundImage: AssetImage(
+                                                    "assests/male.jpg"))
+                                            : const CircleAvatar(
+                                                radius: 40,
+                                                backgroundImage: AssetImage(
+                                                    "assests/female.jpg"))
+                                        : ClipOval(
+                                            child: CachedNetworkImage(
+                                              fit: BoxFit.cover,
+                                              imageUrl: data['Image'],
+                                              height: 40,
+                                              width: 40,
+                                              placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ),
+                                          ),
                                     title: Text(data['Name']),
                                   );
                                 }),

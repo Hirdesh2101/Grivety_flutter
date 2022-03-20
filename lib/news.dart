@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -5,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:grivety/addnews.dart';
 import 'package:grivety/news_dtail.dart';
 import './quest_pass.dart';
+import 'package:dio/dio.dart';
 import 'package:shimmer/shimmer.dart';
 
 class News extends StatefulWidget {
@@ -23,10 +26,24 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
         .pushNamed(NewsDetail.routeName, arguments: Details(documents, index));
   }
 
+  statup() async {
+    print('ayaaa');
+    print('ayaaaaa');
+    print('ayaaaaaa');
+    print('ayaaaaaaaa');
+    print('ayaaaaaaaaaa');
+    Response response;
+    var dio = Dio();
+    response = await dio.get('http://10.0.2.2:3000/');
+    List<int> tempList = (response.data['data']['data']).cast<int>();
+    print(utf8.decode((tempList)));
+  }
+
   @mustCallSuper
   Widget build(BuildContext context) {
     super.build(context);
     // Firebase.initializeApp();
+    statup();
     return Stack(
       children: [
         Container(

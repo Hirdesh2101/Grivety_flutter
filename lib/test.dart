@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grivety/clubs.dart';
 
@@ -48,18 +49,31 @@ class _TestState extends State<Test> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ClipOval(
-                                  //radius: 45,
-                                  child: (snapshot.data!.data()['Image'] ==
-                                              'Male' ||
-                                          snapshot.data!.data()['Image'] ==
-                                              'Female')
-                                      ? snapshot.data!.data()['Image'] == 'Male'
-                                          ? Image.asset("assests/male.jpg")
-                                          : Image.asset("assests/female.jpg")
-                                      : Image.network(
-                                          snapshot.data!.data()['Image']),
-                                ),
+                                (snapshot.data!.data()['Image'] == 'Male' ||
+                                        snapshot.data!.data()['Image'] ==
+                                            'Female')
+                                    ? snapshot.data!.data()['Image'] == 'Male'
+                                        ? const CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage:
+                                                AssetImage("assests/male.jpg"))
+                                        : const CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: AssetImage(
+                                                "assests/female.jpg"))
+                                    : ClipOval(
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl:
+                                              snapshot.data!.data()['Image'],
+                                          height: 40,
+                                          width: 40,
+                                          placeholder: (context, url) =>
+                                              const CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
                                 SizedBox(height: 10),
                                 Text('Welcome'),
                                 Text(snapshot.data!.data()['Name']),
