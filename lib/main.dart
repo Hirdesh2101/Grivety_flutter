@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grivety/addnews.dart';
 import 'package:grivety/auth/addImage.dart';
 import 'dart:async';
-
 import 'package:grivety/auth/login.dart';
 import 'package:grivety/auth/register.dart';
 import 'package:grivety/comments.dart';
@@ -24,6 +23,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _isTimerDone = false;
+  @override
+  void initState() {
+    Timer(
+        const Duration(seconds: 2), () => setState(() => _isTimerDone = true));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Future<FirebaseApp> _initialize = Firebase.initializeApp();
@@ -34,7 +41,8 @@ class _MyAppState extends State<MyApp> {
             title: "Grivety",
             theme: ThemeData.dark(),
             darkTheme: ThemeData.dark(),
-            home: appshapshot.connectionState != ConnectionState.done
+            home: appshapshot.connectionState != ConnectionState.done ||
+                    !_isTimerDone
                 ? Splash()
                 : StreamBuilder(
                     stream: FirebaseAuth.instance.authStateChanges(),

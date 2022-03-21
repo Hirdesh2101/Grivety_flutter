@@ -56,12 +56,16 @@ class _ImageComState extends State<ImageCom> {
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             _visible
-                ? Center(
+                ? Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
                     child: Lottie.asset(
                       'assests/likeanim.json',
                       repeat: true,
-                      height: 180,
-                      width: 180,
+                      height: 80,
+                      width: 80,
                     ),
                   )
                 : SizedBox(

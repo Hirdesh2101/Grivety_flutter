@@ -107,7 +107,7 @@ class _CommentsState extends State<Comments> {
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                  final data = snapshot.data!;
+                                  final data = snapshot.data;
                                   if (!snapshot.hasData) {
                                     return ListTile(
                                       leading: CircleAvatar(
@@ -118,15 +118,15 @@ class _CommentsState extends State<Comments> {
                                     );
                                   }
                                   return ListTile(
-                                    leading: (data['Image'] == 'Male' ||
+                                    leading: (data!['Image'] == 'Male' ||
                                             data['Image'] == 'Female')
                                         ? data['Image'] == 'Male'
                                             ? const CircleAvatar(
-                                                radius: 40,
+                                                radius: 23,
                                                 backgroundImage: AssetImage(
                                                     "assests/male.jpg"))
                                             : const CircleAvatar(
-                                                radius: 40,
+                                                radius: 23,
                                                 backgroundImage: AssetImage(
                                                     "assests/female.jpg"))
                                         : ClipOval(

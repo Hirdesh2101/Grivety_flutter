@@ -167,11 +167,11 @@ class _PeopleState extends State<People> with AutomaticKeepAliveClientMixin {
                                           'Female')
                                   ? documents[index].data()['Image'] == 'Male'
                                       ? const CircleAvatar(
-                                          radius: 40,
+                                          radius: 23,
                                           backgroundImage:
                                               AssetImage("assests/male.jpg"))
                                       : const CircleAvatar(
-                                          radius: 40,
+                                          radius: 23,
                                           backgroundImage:
                                               AssetImage("assests/female.jpg"))
                                   : ClipOval(

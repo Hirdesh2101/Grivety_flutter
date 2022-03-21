@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grivety/clubs.dart';
 
 import './edit_profile.dart';
@@ -146,7 +147,7 @@ class _TestState extends State<Test> {
                                     img: '',
                                     text: 'Close',
                                     descriptions:
-                                        "App developed by Hirdesh Garg 2nd Year Chemical Engineering",
+                                        "App developed by Hirdesh Garg ",
                                     branch: '',
                                   );
                                 });
@@ -157,11 +158,20 @@ class _TestState extends State<Test> {
           ),
         ),
         appBar: AppBar(
+          title: Text(
+            'Grivety',
+            style: GoogleFonts.getFont('Hurricane',
+                textStyle: const TextStyle(
+                  fontSize: 28,
+                  //fontWeight: FontWeight.bold,
+                  letterSpacing: 3.0,
+                )),
+          ),
           bottom: TabBar(
             isScrollable: true,
             tabs: [
               Tab(text: "Community"),
-              Tab(text: "News"),
+              Tab(text: "Alerts"),
               Tab(text: "People"),
               Tab(text: "Clubs")
             ],
