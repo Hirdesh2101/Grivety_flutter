@@ -52,7 +52,7 @@ class _NewsState extends State<News> with AutomaticKeepAliveClientMixin {
                   Response response;
                   var dio = Dio();
                   response = await dio
-                      .get('http://10.0.2.2:3000/')
+                      .get('https://frozen-anchorage-01625.herokuapp.com/')
                       .timeout(Duration(seconds: 5));
                   data = (response.data['news']);
                   data2 = (response.data['newsLink']);
